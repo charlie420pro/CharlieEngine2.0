@@ -3,39 +3,55 @@
 
 namespace ceEngineSDK
 {
-	/************************************************************************/
-	/*   Declaracion por delante de las estructuras definidas en el CPP		*/
-	/************************************************************************/
+	///************************************************************************/
+	///*   Declaracion por delante de las estructuras definidas en DXHeaders  */
+	///************************************************************************/ 
 	struct DeviceContext;
 
-	//! Clase para la utilizacion de objetos ceDeviceContext.
+	/**
+	 *	@brief Clase para la utilizacion de objetos DeviceContext.
+	 */
 	class CE_GRAPHICS_EXPORT ceDeviceContext
 	{
+		///************************************************************************/
+		///*                     Friends de Clases.								  */
+		///************************************************************************/
+
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                   Constructor y Destructor de la clase.			  */
+		///************************************************************************/
+
 	public:
-		//! Constructor default.
-		ceDeviceContext();
-		//! Destructor default.
-		~ceDeviceContext();
-
-		/************************************************************************/
-		/*						Variables miembro de la clase					*/
-		/************************************************************************/
-
-		//! Puntero a un objeto DeviceContext.
-		DeviceContext* m_pDeviceContext;
 
 		/**
-		 *	@brief Funcion para liberar la memoria del objeto.
+		 *	@brief Constructor default de la clase.
+		 */
+		ceDeviceContext();
+
+		/**
+		 *	@brief Destructor default de la clase.
+		 */
+		~ceDeviceContext();
+
+		///************************************************************************/
+		///*						Variables miembro de la clase				  */
+		///************************************************************************/
+
+		/** 
+		 *	@brief Puntero a un objeto DeviceContext.
+		 */
+		DeviceContext* m_pDeviceContext;
+
+		///************************************************************************/
+		///*                        Funciones de clase.							  */
+		///************************************************************************/
+
+		/**
+		 *	@brief Funcion para mandar liberar la memoria del objeto.
 		 */
 		void Destroy();
-
-		/************************************************************************/
-		/*								Accesores								*/	
-		/************************************************************************/
-
-		//! Funcion para obtener el DeviceContext por parametro.
-		void** GetDeviceContextReference();
-		//! Funcion para obtener el deviceContext como puntero.
-		void* GetDeviceContext();
 	};
 }

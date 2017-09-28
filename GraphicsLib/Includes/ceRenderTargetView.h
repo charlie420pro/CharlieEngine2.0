@@ -1,55 +1,64 @@
 #pragma once
-#include "cePrerequisitesGraphics.h"
+#include "ceSwapChain.h"
 #include "ceTexture.h"
 
 namespace ceEngineSDK
 {
-	/************************************************************************/
-	/*   Declaracion por delante de las estructuras definidas en el CPP		*/
-	/************************************************************************/
-	struct RTV;
+	///************************************************************************/
+	///*   Declaracion por delante de las estructuras definidas en DXHeaders  */
+	///************************************************************************/
+	struct RenderTargetView;
 
 	//! Clase de render target view.
 	class CE_GRAPHICS_EXPORT ceRenderTargetView
 	{
-	public:
-		/************************************************************************/
-		/*                       Constructor y Destructor						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                     Friends de Clase.								  */
+		///************************************************************************/
 
-		//! Constructor default.
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                   Constructor y Destructor de la clase.			  */
+		///************************************************************************/
+
+	public:
+
+		/** 
+		 *	@brief Constructor default.
+		 */
 		ceRenderTargetView();
-		//! Destructor default.
+
+		/** 
+		 *	@brief Destructor default.
+		 */
 		~ceRenderTargetView();
 
-		/************************************************************************/
-		/*                      Variables miembro de clase.						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Variables miembro de clase.					  */
+		///************************************************************************/
 
-		//! Puntero al render target view.
-		RTV* m_pRenderTargetView;
+		/** 
+		 *	@brief Puntero al render target view.
+		 */
+		RenderTargetView* m_pRenderTargetView;
 
-		/************************************************************************/
-		/*                      Funciones de clase.								*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Funciones de clase.							  */
+		///************************************************************************/
 
 		/**
 		 *	@brief Funcion para liberar memoria del objeto.
 		 */
 		void Destroy();
 
-		//! Funcion para crear el RTV.
-		void CreateRTV(void* pSwapChain, void* pDevice, ceTexture& pTexture);
-
-		/************************************************************************/
-		/*							Accesores.									*/
-		/************************************************************************/
-
-		//! Funcion para obtener por referencia el RTV.
-		void** GetRenderTargetViewReference();
-		//! Funcion para obtener el RTV.
-		void* GetRenderTargetView();
-		
-
+		/**
+		 *	@brief Funcion para crear el RTV.
+		 *	@param ceSwapChain* pSwapChain: Cadena de intercambio.
+		 *	@param ceDevice* pDevice: Device para crear el RTV.
+		 *	@param ceTexture& pTexture: Textura donde se va a crear.
+		 */
+		void CreateRTV(ceSwapChain* pSwapChain, ceDevice* pDevice, ceTexture& pTexture);
 	};
 }

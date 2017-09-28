@@ -3,52 +3,76 @@
 
 namespace ceEngineSDK
 {
-	///************************************************************************/
-	///*   Declaracion por delante de las estructuras definidas en el CPP	  */
-	///************************************************************************/
-	struct ceBufferDX;
-
-	//! Clase de buffers constantes hereda de buffer.
+	/**
+	 *	@brief Clase de buffers constantes, hereda de buffer.
+	 */
 	class CE_GRAPHICS_EXPORT ceConstantBuffer : public ceBuffer 
 	{
+
+		///************************************************************************/
+		///*                     Friends de Clase.								  */
+		///************************************************************************/
+
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                   Constructor y Destructor default					  */
+		///************************************************************************/
+
 	public:
-		/************************************************************************/
-		/*                   Constructor y Destructor default					*/
-		/************************************************************************/
 
-		//! Constructor default.
+		/**
+		 *	@brief Constructor default.
+		 */
 		ceConstantBuffer();
-		//! Destructor default.
-		virtual~ceConstantBuffer();
 
-		/************************************************************************/
-		/*                    Funciones de la clase								*/
-		/************************************************************************/
+		/**
+		 *	@brief Destructor default.
+		 */
+		virtual ~ceConstantBuffer();
 
-		
-		//! Funcion para crear un buffer.
-		bool CreateBuffer(void* pDevice);
-		//! Funcion para setear un buffer.
-		void SetBuffer(void* pDeviceContext, uint32 StartSlot);
+		///************************************************************************/
+		///*                    Funciones de la clase							  */
+		///************************************************************************/
 
 		
+		/**
+		 *	@brief Funcion para crear un buffer.
+		 *	@param ceDevice* pDevice: Device para creacion de buffer.
+		 *	@param uint32 uiSize: Tamaño del buffer.
+		 *	@return verdadero si se creo con exito, falso en caso contrario.
+		 */
+		bool CreateBuffer(ceDevice* pDevice, uint32 uiSize);
 
+		/**
+		 *	@brief Funcion para setear un buffer.
+		 *	@param ceDeviceContext* pDeviceContext: DeviceContext para setear el buffer constante.
+		 *	@param uint32 StartSlot: Posicion en la que se seteara el buffer.
+		 */
+		void SetBuffer(ceDeviceContext* pDeviceContext, uint32 StartSlot);
 
-		/************************************************************************/
-		/*                         Funciones heredadas						    */
-		/************************************************************************/
+		///************************************************************************/
+		///*                         Funciones heredadas						  */
+		///************************************************************************/
 
-		//! Funcion para destruir.
+		/**
+		 *	@brief Funcion para liberar memoria del buffer.
+		 */
 		virtual void Destroy();
-		//! Funcion que retorna un VertexBuffer como referencia.
-		virtual void** GetBufferReference();
-		//! Funcion que retorna un Buffer para guardar el mundo.
-		virtual void* GetBuffer();
 
-		//! Funcion de mapeado de buffer.
-		virtual void* MapBuffer(void* pDeviceContext);
-		//! Funcion de unmapeado de buffer.
-		virtual void UnMapBuffer(void* pDeviceContext);
+		/**
+		 *	@brief Funcin para mapear un buffer.
+		 *	@param ceDeviceContext* pDeviceContext: El device context que se requiere para mapear el buffer.
+		 *	@return recurso mapeado visto como void*.
+		 */
+		virtual void* MapBuffer(ceDeviceContext* pDeviceContext);
+
+		/**
+		 *	@brief Funcion de un map para el buffer.
+		 *	@param ceDeviceContext* pDeviceContext: El device context que se requiere llamar la funcion de unmap.
+		 */
+		virtual void UnMapBuffer(ceDeviceContext* pDeviceContext);
 	};
 
 }

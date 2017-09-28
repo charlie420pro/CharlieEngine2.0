@@ -24,17 +24,14 @@
   <ItemGroup>
     <ClInclude Include="Includes\ceBlob.h" />
     <ClInclude Include="Includes\ceBuffer.h" />
-    <ClInclude Include="Includes\ceCamera.h" />
     <ClInclude Include="Includes\ceConstantBuffer.h" />
     <ClInclude Include="Includes\ceDepthStencilView.h" />
     <ClInclude Include="Includes\ceDevice.h" />
     <ClInclude Include="Includes\ceDeviceContext.h" />
     <ClInclude Include="Includes\ceGraphicsAPI.h" />
     <ClInclude Include="Includes\ceIndexBuffer.h" />
-    <ClInclude Include="Includes\ceInputLayaout.h" />
-    <ClInclude Include="Includes\ceMaterial.h" />
-    <ClInclude Include="Includes\ceMesh.h" />
-    <ClInclude Include="Includes\ceModel.h" />
+    <ClInclude Include="Includes\ceInputLayout.h" />
+    <ClInclude Include="Includes\ceLight.h" />
     <ClInclude Include="Includes\cePixelShader.h" />
     <ClInclude Include="Includes\cePrerequisitesGraphics.h" />
     <ClInclude Include="Includes\ceRenderTargetView.h" />
@@ -43,7 +40,6 @@
     <ClInclude Include="Includes\ceSwapChain.h" />
     <ClInclude Include="Includes\ceTexture.h" />
     <ClInclude Include="Includes\ceVertex.h" />
-    <ClInclude Include="Includes\ceVertexBuffer.h" />
     <ClInclude Include="Includes\ceVertexShader.h" />
     <ClInclude Include="Includes\DX11Headers.h" />
     <ClInclude Include="Includes\resource.h" />
@@ -51,27 +47,21 @@
   <ItemGroup>
     <ClCompile Include="Src\ceBlob.cpp" />
     <ClCompile Include="Src\ceBuffer.cpp" />
-    <ClCompile Include="Src\ceCamera.cpp" />
     <ClCompile Include="Src\ceConstantBuffer.cpp" />
     <ClCompile Include="Src\ceDepthStencilView.cpp" />
     <ClCompile Include="Src\ceDevice.cpp" />
     <ClCompile Include="Src\ceDeviceContext.cpp" />
     <ClCompile Include="Src\ceGraphicsAPI.cpp" />
     <ClCompile Include="Src\ceIndexBuffer.cpp" />
-    <ClCompile Include="Src\ceInputLayaout.cpp" />
-    <ClCompile Include="Src\ceMaterial.cpp" />
-    <ClCompile Include="Src\ceMesh.cpp" />
-    <ClCompile Include="Src\ceModel.cpp" />
+    <ClCompile Include="Src\ceInputLayout.cpp" />
     <ClCompile Include="Src\cePixelShader.cpp" />
     <ClCompile Include="Src\ceRenderTargetView.cpp" />
     <ClCompile Include="Src\ceSampler.cpp" />
     <ClCompile Include="Src\ceShaderResourceView.cpp" />
     <ClCompile Include="Src\ceSwapChain.cpp" />
     <ClCompile Include="Src\ceTexture.cpp" />
-    <ClCompile Include="Src\ceVertex.cpp" />
     <ClCompile Include="Src\ceVertexBuffer.cpp" />
     <ClCompile Include="Src\ceVertexShader.cpp" />
-    <ClCompile Include="Src\Main.cpp" />
     <ClCompile Include="Src\Source.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -129,14 +119,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)Utilities\Includes\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\;$(STB_IMAGE);$(FREEIMAGE_DIR_LIB)Source\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\;$(FREEIMAGE_DIR_LIB)Source\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(ASSIMP)Libs\$(Configuration)\$(PlatformTarget)\;$(FREEIMAGE_DIR_LIB)Dist\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)Utilities\Includes\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\;$(STB_IMAGE);$(FREEIMAGE_DIR_LIB)Source\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\;$(FREEIMAGE_DIR_LIB)Source\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(ASSIMP)Libs\$(Configuration)\$(PlatformTarget)\;$(FREEIMAGE_DIR_LIB)Dist\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

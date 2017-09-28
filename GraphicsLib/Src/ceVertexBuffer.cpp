@@ -1,47 +1,35 @@
 #include "ceVertexBuffer.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
+#include "DX11Headers.h"
 
 namespace ceEngineSDK
 {
-	/**
-	 *	@brief Constructor default.
-	 **/
+	//! Constructor default de la clase.
 	ceVertexBuffer::ceVertexBuffer()
 	{
+		/// Llama al constructor del padre.
 		__super::ceBuffer();
 	}
 
-	/**
-	 *	@brief Destructor default.
-	 **/
+	//! Destructor default de clase.
 	ceVertexBuffer::~ceVertexBuffer()
 	{
-		Destroy();
+		/// Llama al destructor del padre.
+		__super::ceBuffer();
 	}
 
-	
-	/**
-	*	@brief Funcion para destruir.
-	**/
+	//! Funcion para liberar memoria del buffer constante.
 	void ceVertexBuffer::Destroy()
 	{
+		/// Llama la funcion Destroy del padre.
 		__super::Destroy();
 	}
 
-	/**
-	 *	@brief Funcion para crear un buffer.
-	 *	@param void* pDevice device para la creacion del buffer.
-	 *  @param vector<ceVertex*> Vertex arreglo de vertices.
-	 *  @return verdadero si se creo el buffer, falso en caso contrario.
-	 **/
-	bool ceVertexBuffer::CreateBuffer(void * pDevice, Vector<ceVertex>& Vertex)
+	//! Funcion para crear un buffer de vertices.
+	bool ceVertexBuffer::CreateBuffer(ceDevice * pDevice, Vector<ceVertex>& Vertex)
 	{
 		
 		HRESULT hr = S_OK;
-		ID3D11Device* tempDevice = reinterpret_cast<ID3D11Device*>(pDevice);
-		ID3D11Buffer** ppBufferRef = reinterpret_cast<ID3D11Buffer**>(GetBufferReference());
-
+	
 		D3D11_BUFFER_DESC bd;
 		ZeroMemory(&bd, sizeof(bd));
 		bd.Usage = D3D11_USAGE_DEFAULT;
@@ -57,7 +45,7 @@ namespace ceEngineSDK
 		InitData.pSysMem = &Vertex[0];
 
 		
-		hr = tempDevice->CreateBuffer(&bd, &InitData, ppBufferRef);
+		hr = pDevice->m_pDevice->m_DXDevice->CreateBuffer(&bd, &InitData, &m_pBuffer->m_pDXBuffer);
 		if (FAILED(hr)) {
 			return false;
 		}
@@ -65,55 +53,26 @@ namespace ceEngineSDK
 		return true;
 	}
 
-	/**
-	 *	@brief Funcion para setear el buffer.
-	 *	@param void* pDeviceContext el device context para setear el buffer.
-	 **/
-	void ceVertexBuffer::SetBuffer(void * pDeviceContext)
+	//! Funcion para setar el buffer de vertices.
+	void ceVertexBuffer::SetBuffer(ceDeviceContext * pDeviceContext)
 	{
 		uint32 Stride = sizeof(ceVertex);
 		uint32 Offset = 0;
 
-		ID3D11DeviceContext* tempDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(pDeviceContext);
-		ID3D11Buffer** ppBuffer = reinterpret_cast<ID3D11Buffer**>(GetBufferReference());
-
-		tempDeviceContext->IASetVertexBuffers(0, 1, ppBuffer, &Stride, &Offset);
+		pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->IASetVertexBuffers(0, 1, &m_pBuffer->m_pDXBuffer, &Stride, &Offset);
 	}
 
-	/**
-	*	@brief Funcion para Obtener por referencia el buffer.
-	*	@return Referencia del buffer.
-	**/
-	void ** ceVertexBuffer::GetBufferReference()
+	//! Funcion para mapear el buffer constante.
+	void * ceVertexBuffer::MapBuffer(ceDeviceContext * pDeviceContext)
 	{
-		return __super::GetBufferReference();
+		/// Llama la funcion MapBuffer del padre.
+		return __super::MapBuffer(pDeviceContext);
 	}
 
-	/**
-	*	@brief Funcion para obtener un puntero al buffer.
-	*	@return Puntero al buffer.
-	**/
-	void * ceVertexBuffer::GetBuffer()
+	//! Funcion para hacer unmap al buffer constante.
+	void ceVertexBuffer::UnMapBuffer(ceDeviceContext * pDeviceContext)
 	{
-		return __super::GetBuffer();	
-	}
-
-	/**
-	*	@brief Funcion para mapear el buffer.
-	*	@brief void* pDeviceContext el device context para mapear el buffer.
-	*	@return Recurso mapeado.
-	**/
-	void * ceVertexBuffer::MapBuffer(void * pDeviceContext)
-	{
-		 return __super::MapBuffer(pDeviceContext);
-	}
-
-	/**
-	*	@brief Funcion para hacer unmap al buffer.
-	*	@brief void* pDeviceContext el device context para unmapear el buffer.
-	**/
-	void ceVertexBuffer::UnMapBuffer(void * pDeviceContext)
-	{
+		/// Llama la funcion UnMapBuffer del padre.
 		__super::UnMapBuffer(pDeviceContext);
 	}
 }

@@ -1,12 +1,10 @@
-#define STB_IMAGE_IMPLEMENTATION
 #define BIT_PER_PIXEL 32
 
 #include "windows.h"
 #include "ceTexture.h"
-#include "stb_image.h"
+#include "DX11Headers.h"
 
 #include <FreeImage.h>
-#include "DX11Headers.h"
 
 namespace ceEngineSDK
 {
@@ -37,31 +35,6 @@ namespace ceEngineSDK
 		}
 	}
 
-	//! Funcion para obtener una referencia a la textura.
-	void ** ceTexture::GetTextureReference()
-	{
-		/// Regresa una referencia a la textura como un void** para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void**>(&this->m_pTexture->m_pDXTexture);
-	}
-
-	//! Funcion para obtener la textura.
-	void * ceTexture::GetTexture()
-	{
-		/// Regresa la textura como un void* para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void*>(this->m_pTexture->m_pDXTexture);
-	}
-
-	void ** ceTexture::GetShaderResourceViewReference()
-	{
-		return reinterpret_cast<void**>(&this->m_pTexture->m_pDXShaderResourceView);
-	}
-
-	void * ceTexture::GetShaderResourceView()
-	{
-		/// Regresa la textura como un void* para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void*>(this->m_pTexture->m_pDXShaderResourceView);
-	}
-
 	//! Funcion para setear la textura.
 	void ceTexture::SetTexture(void* pTexture)
 	{
@@ -69,16 +42,11 @@ namespace ceEngineSDK
 	}
 
 	//! Funcion para cargar una textura desde archivo.
-	void ceTexture::LoadTextureFromFile(String sFileName, void* pDevice, void* pDeviceContext)
+	void ceTexture::LoadTextureFromFile(String sFileName, ceDevice* pDevice)
 	{
 		//TODO: Separar todo esto por funciones esto esta hardcore aqui en la misma funcion.
 		HRESULT hr;
-		/*int32 iComponent;
-		int32 iRequeriment_Component;
-
-		unsigned char* pImageBts = stbi_load(sFileName.c_str(), &m_iWidth, &m_iHeight, &iComponent, iRequeriment_Component);
-		*/
-
+	
 		/// Creamos el formato de imagen que se va a utilizar y lo inicializamos como UNKNOWN.
 		FREE_IMAGE_FORMAT ImageFormat = FIF_UNKNOWN;
 		/// Cargamos la imagen desde un archivo.
@@ -151,7 +119,7 @@ namespace ceEngineSDK
 
 
 		/// Creamos la textura2D.
-		hr = reinterpret_cast<ID3D11Device*>(pDevice)->CreateTexture2D(&Desc, &SubData, &pTempTexture);
+		hr = pDevice->m_pDevice->m_DXDevice->CreateTexture2D(&Desc, &SubData, &pTempTexture);
 		if (FAILED(hr))
 		{
 			/// Imprimimos en consola que no se pudo crear la textura.
@@ -167,7 +135,7 @@ namespace ceEngineSDK
 		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 
 	
-		reinterpret_cast<ID3D11Device*>(pDevice)->CreateShaderResourceView(pTempTexture, &sRVDesc, &pShaderResourceView);
+		pDevice->m_pDevice->m_DXDevice->CreateShaderResourceView(pTempTexture, &sRVDesc, &pShaderResourceView);
 		//reinterpret_cast<ID3D11DeviceContext*>(pDeviceContext)->GenerateMips(pShaderResourceView);
 
 		m_pTexture->m_pDXTexture = pTempTexture;

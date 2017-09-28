@@ -3,43 +3,55 @@
 
 namespace ceEngineSDK
 {
-	/************************************************************************/
-	/*   Declaracion por delante de las estructuras definidas en el CPP		*/
-	/************************************************************************/
+	///************************************************************************/
+	///*   Declaracion por delante de las estructuras definidas en DXHeaders  */
+	///************************************************************************/
 	struct ShaderResourceView;
 
-	//! Clase de shader resource view.
+	/** 
+	 *	@brief Clase de shader resource view.
+	 */
 	class CE_GRAPHICS_EXPORT ceShaderResourceView
 	{
-	public:
-		/************************************************************************/
-		/*                       Constructor y Destructor						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                     Friends de Clase.								  */
+		///************************************************************************/
 
-		//! Constructor default.
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                   Constructor y Destructor de la clase.			  */
+		///************************************************************************/
+
+	public:
+
+		/** 
+		 *	@brief Constructor default.
+		 */
 		ceShaderResourceView();
-		//! Destructor default.
+
+		/** 
+		 *	@brief Destructor default.
+		 */
 		~ceShaderResourceView();
 
-		/************************************************************************/
-		/*                      Variables miembro de clase.						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Variables miembro de clase.					  */
+		///************************************************************************/
 
-		//! Puntero al shader resource view.
+		/** 
+		 *	@brief Puntero al shader resource view.
+		 */
 		ShaderResourceView* m_pShaderResourceView;
 
-		/************************************************************************/
-		/*							Funciones de la clase.					    */
-		/************************************************************************/
+		///************************************************************************/
+		///*							Funciones de la clase.					  */
+		///************************************************************************/
 
 		/**
 		 *	@brief Funcion para liberar memoria del objeto.
 		 */
 		void Destroy();
-
-		//! Funcion para obtener por referencia el ShaderResourceView.
-		void** GetShaderResourceViewReference();
-		//! Funcion para obtener el ShaderResourceView.
-		void* GetShaderResourceView();
 	};
 }

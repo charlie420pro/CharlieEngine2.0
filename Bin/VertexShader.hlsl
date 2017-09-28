@@ -38,7 +38,7 @@ VS_OUTPUT VSMain(VS_INPUT vsInput)
 	output.m_Position = mul(output.m_Position, m_World);
 	output.m_Position = mul(output.m_Position, m_View);
 	output.m_Position = mul(output.m_Position, m_Projection);
-    output.m_Normals = normalize(mul(float4(vsInput.m_Normals, 0), m_World));
 	output.m_TexCoord = vsInput.m_TexCoord;
+    output.m_Normals = normalize(mul(float4(vsInput.m_Normals, 0), m_World));
 	return output;
 }

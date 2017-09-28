@@ -3,19 +3,20 @@
 
 namespace ceEngineSDK
 {
-	
+	//! Constructor default de la clase.
 	ceSampler::ceSampler()
 	{
 		m_pSampler = nullptr;
 		m_pSampler = new Sampler();
 	}
 
-
+	//! Destructor default de la clase.
 	ceSampler::~ceSampler()
 	{
 		Destroy();
 	}
 
+	//! Funcion para liberar memoria del sampler.
 	void ceSampler::Destroy()
 	{
 		if (m_pSampler != nullptr)
@@ -26,21 +27,11 @@ namespace ceEngineSDK
 		}
 	}
 
-	void ** ceSampler::GetSamplerReference()
-	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void** para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void**>(&this->m_pSampler->m_DXSamplerLinear);
-	}
-	void* ceSampler::GetSampler()
-	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void* para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void*>(this->m_pSampler->m_DXSamplerLinear);
-	}
-
-	void ceSampler::CreateSampler(void * pDevice)
+	//! Funcion para crear el sampler.
+	void ceSampler::CreateSampler(ceDevice * pDevice)
 	{
 		HRESULT hr = S_OK;
-		ID3D11Device* pTempDevice = reinterpret_cast<ID3D11Device*>(pDevice);
+	
 		// Create the sample state
 		D3D11_SAMPLER_DESC sampDesc;
 		ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -52,7 +43,7 @@ namespace ceEngineSDK
 		sampDesc.MinLOD = 0;
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		hr = pTempDevice->CreateSamplerState(&sampDesc, &m_pSampler->m_DXSamplerLinear);
+		hr = pDevice->m_pDevice->m_DXDevice->CreateSamplerState(&sampDesc, &m_pSampler->m_DXSampler);
 
 		if (FAILED(hr))
 			std::cout << "Fallo al CrearSampler" << std::endl;

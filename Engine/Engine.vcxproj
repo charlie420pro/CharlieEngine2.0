@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Includes\ceCamera.h" />
+    <ClInclude Include="Includes\ceEmitter2D.h" />
+    <ClInclude Include="Includes\ceEmitter3D.h" />
+    <ClInclude Include="Includes\ceForces.h" />
+    <ClInclude Include="Includes\ceParticle.h" />
+    <ClInclude Include="Includes\ceEmitterBase.h" />
+    <ClInclude Include="Includes\ceMaterial.h" />
+    <ClInclude Include="Includes\ceMesh.h" />
+    <ClInclude Include="Includes\ceModel.h" />
+    <ClInclude Include="Includes\ceParticleSystem.h" />
+    <ClInclude Include="Includes\cePrerequisitesEngine.h" />
+    <ClInclude Include="Includes\ceScene.h" />
+    <ClInclude Include="Includes\ceSprite.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\ceCamera.cpp" />
+    <ClCompile Include="Src\ceEmitter2D.cpp" />
+    <ClCompile Include="Src\ceEmitter3D.cpp" />
+    <ClCompile Include="Src\ceForces.cpp" />
+    <ClCompile Include="Src\ceParticle.cpp" />
+    <ClCompile Include="Src\ceEmitterBase.cpp" />
+    <ClCompile Include="Src\ceMaterial.cpp" />
+    <ClCompile Include="Src\ceMesh.cpp" />
+    <ClCompile Include="Src\ceModel.cpp" />
+    <ClCompile Include="Src\ceParticleSystem.cpp" />
+    <ClCompile Include="Src\ceScene.cpp" />
+    <ClCompile Include="Src\ceSprite.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{622C6308-2A24-451D-937C-5B7C906AE12C}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\;$(FREEIMAGE_DIR_LIB)Source\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(ASSIMP)Libs\$(Configuration)\$(PlatformTarget)\;$(FREEIMAGE_DIR_LIB)Dist\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\assimp\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(ASSIMP)Libs\$(Configuration)\$(PlatformTarget)\;$(FREEIMAGE_DIR_LIB)Dist\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\;$(FREEIMAGE_DIR_LIB)Source\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(ASSIMP)Libs\$(Configuration)\$(PlatformTarget)\;$(FREEIMAGE_DIR_LIB)Dist\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(ASSIMP)include\assimp\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(ASSIMP)Libs\$(Configuration)\$(PlatformTarget)\;$(FREEIMAGE_DIR_LIB)Dist\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>./Includes/</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CE_ENGINE_EXPORTS</PreprocessorDefinitions>
+    </ClCompile>
+    <BuildLog>
+      <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
+    </BuildLog>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;assimp-vc140-mtd.lib;FreeImaged.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>./Includes/</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CE_ENGINE_EXPORTS</PreprocessorDefinitions>
+    </ClCompile>
+    <BuildLog>
+      <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
+    </BuildLog>
+    <Link>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;assimp-vc140-mtd.lib;FreeImaged.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>./Includes/</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CE_ENGINE_EXPORTS</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;FreeImage.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
+      <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+    </Link>
+    <BuildLog>
+      <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
+    </BuildLog>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>./Includes/</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CE_ENGINE_EXPORTS</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;d3d11.lib;dxgi.lib;d3dcompiler.lib;dxguid.lib;FreeImage.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
+      <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
+      <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+    </Link>
+    <BuildLog>
+      <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
+    </BuildLog>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

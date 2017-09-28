@@ -1,51 +1,66 @@
 #pragma once
-#include "cePrerequisitesGraphics.h"
+#include "ceDevice.h"
 #include "ceBlob.h"
 
 
 namespace ceEngineSDK
 {
-	/************************************************************************/
-	/*   Declaracion por delante de las estructuras definidas en el CPP		*/
-	/************************************************************************/
+	///************************************************************************/
+	///*   Declaracion por delante de las estructuras definidas en DXHeaders  */
+	///************************************************************************/
 	struct PixelShader;
 
-	//! Clase de shader de pixeles.
+	/** 
+	 *	@brief Clase para la utilizacion de shaders de pixeles.
+	 */
 	class CE_GRAPHICS_EXPORT cePixelShader
 	{
-	public:
-		/************************************************************************/
-		/*                    Constructor y Destructor default.					*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                     Friends de Clase.								  */
+		///************************************************************************/
 
-		//! Constructor default.
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                   Constructor y Destructor default					  */
+		///************************************************************************/
+
+	public:
+
+		/**
+		 *	@brief Constructor default.
+		 */
 		cePixelShader();
-		//! Destructor default.
+
+		/**
+		 *	@brief Destructor default.
+		 */
 		~cePixelShader();
 
-		/************************************************************************/
-		/*                      Variables miembro de clase.						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Variables miembro de clase.					  */
+		///************************************************************************/
 
-		//! Puntero al shader de pixeles.
+		/** 
+		 *	@brief Puntero al shader de pixeles.
+		 */
 		PixelShader* m_pPixelShader;
 
-		/************************************************************************/
-		/*                      Funciones de clase.								*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Funciones de clase.							  */
+		///************************************************************************/
 
+		/**
+		 *	@brief Funcion para liberar memoria del PixelShader.
+		 */
+		void Destroy();
 
-		//! Funcion para crear el shader de pixeles.
-		void CreatePixelShader(void* pDevice, ceBlob* pBlob);
-
-		/************************************************************************/
-		/*							Accesores.									*/
-		/************************************************************************/
-
-		//! Funcion para obtener por referencia el shader de pixeles.
-		void** GetPixelShaderReference();
-		//! Funcion para obtener el shader de pixeles.
-		void* GetPixelShader();
-		
+		/** 
+		 *	@brief Funcion para crear el shader de pixeles.
+		 *	@param ceDevice* pDevice: Device para crear el shader.
+		 *	@param ceBlob* pBlob: blob.
+		 */
+		void CreatePixelShader(ceDevice* pDevice, ceBlob* pBlob);
 	};
 }

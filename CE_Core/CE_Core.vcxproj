@@ -80,25 +80,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(SolutionDir)Engine\Includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(SolutionDir)Engine\Includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(SolutionDir)Engine\Includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Bin\$(PlatformTarget)\</OutDir>
     <IntDir>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\</IntDir>
-    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Utilities\Includes\;$(SolutionDir)GraphicsLib\Includes\;$(SolutionDir)Inputs\Include\;$(DXSDK_DIR)\Include\;$(SolutionDir)Engine\Includes\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs\$(Configuration)\$(PlatformTarget)\;$(DXSDK_DIR)\Lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -118,8 +118,8 @@
       <SubSystem>Windows</SubSystem>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;Engine.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -139,8 +139,8 @@
       <SubSystem>Windows</SubSystem>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;Engine.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,8 +160,8 @@
       <SubSystem>Windows</SubSystem>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;Engine.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -184,8 +184,8 @@
       <SubSystem>Windows</SubSystem>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Utilities.lib;GraphicsLib.lib;Inputs.lib;Engine.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>

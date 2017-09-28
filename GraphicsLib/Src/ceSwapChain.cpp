@@ -1,32 +1,9 @@
 #include "ceSwapChain.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
+#include "DX11Headers.h"
 
 namespace ceEngineSDK
 {
-	/** 
-	 *	@brief Estructura que contiene un SwapChain de DirectX.
-	 */
-	struct SwapChain
-	{
-		//! Puntero a un objeto SwapChain de DirectX.
-		IDXGISwapChain* m_DXSwapChain;
-		//! Funcion para destruir.
-		void Destroy() { m_DXSwapChain->Release(); }
-	};
-
-	/**
-	*	@brief Estructura para utilizacion de FeaturesLevels.
-	*/
-	struct FeatureLevel
-	{
-		//! Variable FeatureLevel de DirectX.
-		D3D_FEATURE_LEVEL m_DXFeatureLevel;
-	};
-	
-	/**
-	 * @brief Constructor default de la clase.
-	 */
+	//! Constructor default.
 	ceSwapChain::ceSwapChain()
 	{
 		m_pSwapChain = nullptr;
@@ -36,14 +13,13 @@ namespace ceEngineSDK
 		m_pFeatureLevel->m_DXFeatureLevel = D3D_FEATURE_LEVEL_11_0;
 	}
 
-	/**
-	 * @brief Destructor default de la clase.
-	 */
+	//! Destructor default.
 	ceSwapChain::~ceSwapChain()
 	{
 		Destroy();
 	}
 
+	//! Funcion para liberar memoria del objeto.
 	void ceSwapChain::Destroy()
 	{
 		if (m_pSwapChain != nullptr)
@@ -60,34 +36,10 @@ namespace ceEngineSDK
 		}
 	}
 
-	/**
-	 * @brief Funcion que retorna el swapchain.
-	 * @return referencia al swapchain.
-	 */
-	void** ceSwapChain::GetSwapChainReference()
+	//! Funcion para crear el swapchain, el device y el device context.
+	void ceSwapChain::CreateSwapChainAndDevice(uint32 uiScrenHandle, int32 iWidth,
+		int32 iHeight, ceDevice& Device, ceDeviceContext& DeviceContext)
 	{
-		//! Regresa el swapchain int32erpretado como un void** para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void**>(&this->m_pSwapChain->m_DXSwapChain);
-	}
-
-	void* ceSwapChain::GetSwapChain()
-	{
-		return reinterpret_cast<void*>(this->m_pSwapChain->m_DXSwapChain);
-	}
-
-	void ceSwapChain::CreateSwapChainAndDevice(uint32 uiScrenHandle, int32 iWidth, int32 iHeight, void** pDevice, void** pDeviceContext)
-	{
-
-		ID3D11Device** tempDevice = reinterpret_cast<ID3D11Device**>(pDevice);
-		ID3D11DeviceContext** tempDeviceContext = reinterpret_cast<ID3D11DeviceContext**>(pDeviceContext);
-
-		//! Arreglo de drivertypes.
-		D3D_DRIVER_TYPE driverTypes[] =
-		{
-			D3D_DRIVER_TYPE_HARDWARE,
-			D3D_DRIVER_TYPE_WARP,
-			D3D_DRIVER_TYPE_REFERENCE,
-		};
 
 		//! Arreglo de featurelevels.
 		D3D_FEATURE_LEVEL featureLevels = D3D_FEATURE_LEVEL_11_0;
@@ -95,11 +47,7 @@ namespace ceEngineSDK
 		//! Creamos el hr a modo de bandera.
 		HRESULT hr = S_OK;
 
-		//! Variable temporal para el numero de banderas.
-		int32 iNumFlag = 0;
-
-
-		//! Creamos el descriptor del swapchain.
+		/// Creamos el descriptor del swapchain.
 		DXGI_SWAP_CHAIN_DESC sd;
 		ZeroMemory(&sd, sizeof(DXGI_SWAP_CHAIN_DESC));
 		sd.BufferCount = 1;
@@ -124,14 +72,15 @@ namespace ceEngineSDK
 #endif
 
 		//! Creamos el device y el swapchain.
-		hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 
-											createDeviceFlags, &featureLevels, 1,
-											D3D11_SDK_VERSION, &sd, &m_pSwapChain->m_DXSwapChain, tempDevice, 
-											&m_pFeatureLevel->m_DXFeatureLevel,tempDeviceContext);
+		hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr,
+			createDeviceFlags, &featureLevels, 1, D3D11_SDK_VERSION, &sd,
+			&m_pSwapChain->m_DXSwapChain, &Device.m_pDevice->m_DXDevice,
+			&m_pFeatureLevel->m_DXFeatureLevel,
+			&DeviceContext.m_pDeviceContext->m_pDXDeviceContext);
 
 		//! Si fallo
 		if (FAILED(hr))
-			std::cout << "Fallo al crear SwapChain" << std::endl;		
+			std::cout << "Fallo al crear SwapChain" << std::endl;
 	}
 
 }

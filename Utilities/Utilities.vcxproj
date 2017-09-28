@@ -145,6 +145,7 @@
       <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -165,6 +166,7 @@
       <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -189,6 +191,7 @@
       <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>
@@ -213,6 +216,7 @@
       <ProgramDatabaseFile>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).pgd</ProfileGuidedDatabase>
       <ImportLibrary>$(SolutionDir)Libs\$(Configuration)\$(PlatformTarget)\$(TargetName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <BuildLog>
       <Path>$(SolutionDir)Intermediate\$(ProjectName)\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName).log</Path>

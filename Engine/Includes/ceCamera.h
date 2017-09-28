@@ -1,12 +1,11 @@
 #pragma once
-
-#include "cePrerequisitesGraphics.h"
+#include "cePrerequisitesEngine.h"
 #include <ceVector4D.h>
 #include <ceMatrix_4X4.h>
 
 namespace ceEngineSDK
 {
-	class CE_GRAPHICS_EXPORT ceCamera
+	class CE_ENGINE_EXPORT ceCamera
 	{
 	public:
 		///************************************************************************/

@@ -3,43 +3,56 @@
 
 namespace ceEngineSDK
 {
-	/************************************************************************/
-	/*   Declaracion por delante de las estructuras definidas en el CPP		*/
-	/************************************************************************/
+	///************************************************************************/
+	///*   Declaracion por delante de las estructuras definidas en DXHeaders  */
+	///************************************************************************/
 	struct Device;
 
-	//! Clase para utilizar objeto ceDevice.
+	/**
+	 *	@brief Clase para utilizar un Device.
+	 */
 	class CE_GRAPHICS_EXPORT ceDevice
 	{
+		///************************************************************************/
+		///*                     Friends de Clases.								  */
+		///************************************************************************/
+
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                   Constructor y Destructor de la clase.			  */
+		///************************************************************************/
+
 	public:
-		//! Constructor default de la clase.
+
+		/**
+		 *	@brief Constructor default de la clase.
+		 */
+
 		ceDevice();
-		//! Destructor default de la clase.
+		/** 
+		 *	@brief Destructor default de la clase.
+		 */
 		~ceDevice();
 
-		/************************************************************************/
-		/*                     Variables miembro de la clase					*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                     Variables miembro de la clase					  */
+		///************************************************************************/
 
-		//! Puntero a un device.
+		/**
+		 *	@brief Puntero a un device.
+		 */
 		Device* m_pDevice;
 
-		/************************************************************************/
-		/*                     Variables miembro de la clase					*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                        Funciones de clase.							  */
+		///************************************************************************/
 
 		/**
 		 *	@brief Funcion para mandar liberar la memoria del objeto.
 		 */
 		void Destroy();
 
-		/************************************************************************/
-		/*								Accesores								*/
-		/************************************************************************/
-
-		//! Funcion para obtener el device por referencia.
-		void** GetDeviceReference();
-		//! Funcion para obtener el device como puntero.
-		void* GetDevice();
 	};
 }

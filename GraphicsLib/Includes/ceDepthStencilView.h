@@ -1,51 +1,67 @@
 #pragma once
-#include "cePrerequisitesGraphics.h"
 #include "ceTexture.h"
 
 namespace ceEngineSDK
 {
-	/************************************************************************/
-	/*   Declaracion por delante de las estructuras definidas en el CPP		*/
-	/************************************************************************/
-	struct ceDSV;
-
-	//! Clase para la utilizacion de depthstencilview.
+	///************************************************************************/
+	///*   Declaracion por delante de las estructuras definidas en DXHeaders  */
+	///************************************************************************/
+	struct DepthStencilView;
+	
+	/**
+	 *	@brief Clase para la utilizacion de depthstencilview.
+	 */
 	class CE_GRAPHICS_EXPORT ceDepthStencilView
 	{
+		///************************************************************************/
+		///*                     Friends de Clase.								  */
+		///************************************************************************/
+
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                          Constructor y Destructor.					  */
+		///************************************************************************/
+
 	public:
-		//! Constructor default de la clase.
+
+		/**
+		 *	@brief Constructor default de la clase.
+		 */
 		ceDepthStencilView();
-		//! Destructor default de la clase.
+
+		/**
+		 *	@brief Destructor default de la clase.
+		 */
 		~ceDepthStencilView();
 
-		/************************************************************************/
-		/*							Funciones de la clase						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Variables miembro de la clase					  */
+		///************************************************************************/
+
+		//! Puntero a un DepthStencilView.
+		DepthStencilView* m_pDepthStencilView;
+
+		///************************************************************************/
+		///*							Funciones de la clase					  */
+		///************************************************************************/
 
 		/**
 		 *	@brief Funcion para liberar memoria del objeto.
 		 */
 		void Destroy();
 
-		//! Funcionpara crear el Depth Stencil View.
-		void CreateDSV(void* pDevice, ceTexture& pTexture, int32 iWidth, int32 iHeight);
+		/**
+		 *	@brief Funcion para crear el DepthStencilView.
+		 *	@param ceDevice* pDevice: Device para la creacion del DSV.
+		 *	@param ceTexture& pTexture: Textura a utilizar.
+		 *	@param int32 iWidth: Ancho de la textura.
+		 *	@param int32 iHeight: Alto de la textura.
+		 */
+		void CreateDSV(ceDevice* pDevice, ceTexture& pTexture, int32 iWidth, int32 iHeight);
 
-		/************************************************************************/
-		/*								Accesores								*/
-		/************************************************************************/
-
-		//! Funcion para obtener Depthstencilview por referencia.
-		void** GetDepthStencilViewReference();
-		//! Funcion para obtener el Depthstencilview como puntero.
-		void* GetDepthStencilView();
 		
-
-		/************************************************************************/
-		/*                      Variables miembro de la clase					*/
-		/************************************************************************/
-
-		//! Puntero a un DepthStencilView.
-		ceDSV* m_pDepthStencilView;
 	};
 }
 

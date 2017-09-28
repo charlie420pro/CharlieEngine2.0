@@ -1,27 +1,23 @@
 #include "ceRenderTargetView.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
+#include "DX11Headers.h"
 
 namespace ceEngineSDK
 {
-	struct RTV
-	{
-		ID3D11RenderTargetView* m_DXRenderTargetView;
-		void Destroy() { m_DXRenderTargetView->Release(); }
-	};
-
+	
+	//! Constructor default.
 	ceRenderTargetView::ceRenderTargetView()
 	{
 		m_pRenderTargetView = nullptr;
-		m_pRenderTargetView = new RTV();
+		m_pRenderTargetView = new RenderTargetView();
 	}
 
-
+	//! Destructor default.
 	ceRenderTargetView::~ceRenderTargetView()
 	{
 		Destroy();
 	}
 
+	//! Funcion para liberar memoria del objeto.
 	void ceRenderTargetView::Destroy()
 	{
 		if (m_pRenderTargetView != nullptr)
@@ -32,34 +28,25 @@ namespace ceEngineSDK
 		}
 	}
 
-	void ** ceRenderTargetView::GetRenderTargetViewReference()
+	//! Funcion para crear el Render Target View.
+	void ceRenderTargetView::CreateRTV(ceSwapChain* pSwapChain, ceDevice* pDevice, ceTexture& pTexture)
 	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void** para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void**>(&this->m_pRenderTargetView->m_DXRenderTargetView);
-	}
-	void * ceRenderTargetView::GetRenderTargetView()
-	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void* para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void*>(this->m_pRenderTargetView->m_DXRenderTargetView);
-	}
-
-	void ceRenderTargetView::CreateRTV(void * pSwapChain, void * pDevice, ceTexture& pTexture)
-	{
-		IDXGISwapChain* pTempSwapChain = reinterpret_cast<IDXGISwapChain*>(pSwapChain);
-		ID3D11Device* pTempDevice = reinterpret_cast<ID3D11Device*>(pDevice);
-
-		//! Creamos un HRESULT a manera de bandera.
+	
+		/// Creamos un HRESULT a manera de bandera.
 		HRESULT hr = S_OK;
 
-		hr = pTempSwapChain->GetBuffer(0, IID_ID3D11Texture2D, pTexture.GetTextureReference());
-		//! Si fallo 
+		hr = pSwapChain->m_pSwapChain->m_DXSwapChain->GetBuffer(
+			0, IID_ID3D11Texture2D,
+			reinterpret_cast<void**>(&pTexture.m_pTexture->m_pDXTexture));
+		
 		if (FAILED(hr))
 			std::cout << "Fallo al Crear la Textura" << std::endl;
 
-		//! //! Creamos el render target view.
-		hr = pTempDevice->CreateRenderTargetView(reinterpret_cast<ID3D11Texture2D*>(pTexture.GetTexture()),
-												nullptr, &m_pRenderTargetView->m_DXRenderTargetView);
-		//! Si fallo
+		/// Creamos el render target view.
+		hr = pDevice->m_pDevice->m_DXDevice->CreateRenderTargetView(
+			pTexture.m_pTexture->m_pDXTexture,
+			nullptr, &m_pRenderTargetView->m_DXRenderTargetView);
+
 		if (FAILED(hr))
 			std::cout << "Fallo al Crear RTV" << std::endl;
 

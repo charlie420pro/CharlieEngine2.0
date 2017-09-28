@@ -9,13 +9,15 @@
 #include "ceBlob.h"
 #include "cePixelShader.h"
 #include "ceVertexShader.h"
-#include "ceTexture.h"
-#include "ceInputLayaout.h"
+
+#include "ceInputLayout.h"
 #include "ceConstantBuffer.h"
 #include "ceShaderResourceView.h"
 #include "ceSampler.h"
-#include "ceModel.h"
-#include "ceCamera.h"
+
+#include "ceLight.h"
+
+#include "ceTexture.h"
 
 #include <cePlatformMath.h>
 #include <ceVector2D.h>
@@ -35,39 +37,7 @@ namespace ceEngineSDK
 	
 	class CE_GRAPHICS_EXPORT ceGraphicsAPI
 	{
-		struct ceDiffuce
-		{
-			/**
-			*	@brief Posicion de la luz.
-			*/
-			ceVector3D m_lightPosition;
-
-			/**
-			*	@brief Escala.
-			*/
-			float m_Scale;
-
-			/**
-			*	@brief Bias.
-			*/
-			float m_Bias;
-
-			/**
-			*	@brief Intensidad.
-			*/
-			float m_Intensity;
-
-			/**
-			*	@brief Sample radius.
-			*/
-			float m_SampleRadius;
-
-			/**
-			*	@brief Color a pintar.
-			*/
-			ceVector4D ClearColor;
-		};
-
+		
 	public:
 		///************************************************************************/
 		///*               Constructor y Destructor de la Clase					  */
@@ -133,14 +103,9 @@ namespace ceEngineSDK
 		ceTexture* m_pTextureRTV;
 
 		/**
-		 *	@brief Modelo.
-		 */
-		ceModel m_Model;
-
-		/**
 		 *	@brief Input Layout.
 		 */
-		ceInputLayaout* m_pInputLayaout;
+		ceInputLayout* m_pInputLayout;
 
 		/**
 		 *	@brief Shader Resource View.
@@ -184,19 +149,9 @@ namespace ceEngineSDK
 		ceMatrix_4X4 m_World;
 
 		/**
-		 *	@brief Camera para vizualizer en la ventana con la matriz de vista y de mundo.
+		 *	@brief Variable para el uso de luz diffusa.
 		 */
-		ceCamera m_Camera;
-
-		/**
-		 *	@brief Vector de modelos.
-		 */
-		Vector<ceModel> m_ModelList;
-
-		/**
-		 *
-		 */
-		ceDiffuce m_Diffuse;
+		ceLight m_Diffuse;
 
 
 		///************************************************************************/
@@ -246,60 +201,110 @@ namespace ceEngineSDK
 		 *	@param uint32 uiScreenHandle: Handle de la ventana.
 		 *	@param int32 iWidth: Ancho de la ventana.
 		 *	@param int32 iHeight: Alto de la ventana.
-		 *	@param void** ppDevice: Puntero a un Device.
-		 *	@param void** ppDeviceContext: Puntero a un DeviceContext.
 		 */
-		void CreateSwapChain(uint32 uiScreenHandle, int32 iWidth, int32 iHeight, void** ppDevice, void** ppDeviceContext);
+		void CreateSwapChain(uint32 uiScreenHandle, int32 iWidth, int32 iHeight);
 		
 		/**
 		 *	@brief Funcion para Crear el Render Target View.
-		 *	@param void* pSwapChain: Puntero al Swapchain.
-		 *	@param void* pDevice: Puntero al Device.
-		 *	@param ceTexture& pTexture: Textura.
 		 */
-		void CreateRenderTargetView(void* pSwapChain, void* pDevice, ceTexture& pTexture);
+		void CreateRenderTargetView();
 
-		//! Funcion para crear el DepthStencilView.
-		void CreateDepthStencilView(void* pDevice, ceTexture& pTexture);
+		/**
+		 *	@brief Funcion para crear el depth stencil view.
+		 */
+		void CreateDepthStencilView();
 		
-		//! Funcion para crear el Shader de Vertices.
-		void CreateVertexShader(void* pDevice);
-		//! Funcion para crear el Shader de Pixeles.
-		void CreatePixelShader(void* pDevice);
+		/**
+		 *	@brief Funcion para crear el Shader de Vertices.
+		 */
+		void CreateVertexShader();
+
+		/** 
+		 *	@brief Funcion para crear el Shader de Pixeles.
+		 */
+		void CreatePixelShader();
 		
-		//! Funcion para crear el InputLayout.
-		void CreateInputLayout(void* pDevice);
+		/** 
+		 *	@brief Funcion para crear el InputLayout.
+		 */
+		void CreateInputLayout();
 	
-		//! Funcion para crear los Buffers Constantes.
-		void CreateConstantBuffers(void* pDevice, const int32 iNumBuffers);
+		/**
+		 *	@brief Funcion para crear los Buffers Constantes.
+		 */
+		void CreateConstantBuffers();
 
-		//! Funcion para crear el Sampler.
-		void CreateSample(void* pDevice);
+		/**
+		 *	@brief Funcion para crear buffers constantes de luces.
+		 *	@param uint32 uiSize: Tamaño del buffer.
+		 */
+		void CreateConstantBuffersLight(uint32 uiSize);
+
+		/** 
+		 *	@brief Funcion para crear el Sampler.
+		 */
+		void CreateSample();
+
+		/**
+		 *	@brief Funcion para crear luces.
+		 */
+		void CreateLight();
 
 		///************************************************************************/
-		///*							 Funciones de Seteo						  */
+		///*					Funciones de Seteo					         	  */
 		///************************************************************************/
 
-		//! Funcion para setear la topologia.
+		/** 
+		 *	@brief Funcion para setear la topologia.
+		 */
 		void SetPrimitiveTopology();
 		
-		//! Funcion para setear los Render Targets.
+		/** 
+		 *	@brief Funcion para setear los Render Targets.
+		 */
 		void SetRenderTargets();
-		//! Funcion para setear el ViewPort.
-		void SetViewPort(void* pDeviceContext);
-		//! Funcion para setear el InputLayout
-		void SetInputLayaout();
 
-		//! Funcion para setear los shaders.
-		void SetShaders(void* pDeviceContext, void* pPixelShader, void* pVertexShader);
+		/** 
+		 *	@brief Funcion para setear el ViewPort.
+		 */
+		void SetViewPort();
+
+		/** 
+		 *	@brief Funcion para setear el InputLayout.
+		 */
+		void SetInputLayout();
+
+		/**
+		 *	@brief Funcion para setear los shaders.
+		 */
+		void SetShaders();
+
+		/**
+		 *	@brief Funcion para setear los buffers constantes.
+		 *	@param ceMatrix_4X4 matProjectionCamera: Matriz de projeccion de la camara.
+		 *	@param ceMatrix_4X4 matViewCamera: Matriz de vista de la camara.
+		 */
+		void SetConstantBuffers(ceMatrix_4X4* matProjectionCamera, ceMatrix_4X4* matViewCamera);
+
+		/**
+		 *	@brief Funcion para setear los samplers.
+		 */
+		void SetSamplers();
 	
 
 		///************************************************************************/
 		///*							 Funciones de Ayuda						  */
 		///************************************************************************/
 
-		//! Funcion para cargar un shader desde un archivo.
-		void CompileShaderFromFile(const char* szFileName, const String szEntryPoint32, const String szShaderModel, ceBlob* ppBlobOut);
+		/**
+		 *	@brief Funcion para cargar un shader desde un archivo.
+		 *	@param const char* szFileName: Ruta del archivo.
+		 *	@param const String szEntryPoint: Nombre de entrada del shader.
+		 *	@param const String szShaderModel: Modelo de shader.
+		 *	@param ceBlob* pBlobOut: Blob de salida.
+		 */
+		void CompileShaderFromFile(const char* szFileName,
+			const String szEntryPoint, const String szShaderModel, ceBlob* pBlobOut);
 
 		
 	};

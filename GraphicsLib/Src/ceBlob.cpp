@@ -4,53 +4,20 @@
 
 namespace ceEngineSDK
 {
-	
-
-	/**
-	 *	@brief Constructor default de la clase.
-	 **/
+	//! Constructor default de la clase.
 	ceBlob::ceBlob()
 	{
 		m_pBlob = nullptr;
-		m_pBlob = new BlobDX();
+		m_pBlob = new Blob();
 	}
 
-	/**
-	 *	@brief Destructor default de la clase.
-	 **/
+	//! Destructor default de la clase.
 	ceBlob::~ceBlob()
 	{
 		Destroy();
 	}
 
-	/**
-	 *	@brief Funcion para obtener una referencia del blob.
-	 *	@return referencia al blob.
-	 **/
-	void ** ceBlob::GetBlobReference()
-	{
-		//! Regresa el Blob por referencia reint32erpretado como void** para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void**>(&this->m_pBlob->m_pDXBlob);
-	}
-	
-	/**
-	 *	@bref Funcion para obtener el puntero al buffer del blob.
-	 *	@return bufferpoint32er
-	 **/
-	const void * ceBlob::GetBufferPointer()
-	{
-		return m_pBlob->m_pDXBlob->GetBufferPointer();
-	}
-
-	/**
-	 *	@brief Funcion para obtener el tamaño del buffer.
-	 *	@return tamaño del buffer.
-	 **/
-	SIZE_T ceBlob::GetBufferSize()
-	{
-		return m_pBlob->m_pDXBlob->GetBufferSize();
-	}
-
+	//! Funcion para liberar memoria del blob.
 	void ceBlob::Destroy()
 	{
 		if (m_pBlob != nullptr)
@@ -61,13 +28,23 @@ namespace ceEngineSDK
 		}
 	}
 
-	/**
-	 *	@brief Funcion para obtener el blob.
-	 *	@return blob.
-	 **/
-	void * ceBlob::GetBlob()
+	//! Funcion para regresar un puntero al buffer.
+	const void* ceBlob::GetBufferPointer()
 	{
-		//! Regresa el blob  reint32erpretado como un void* para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void*>(this->m_pBlob->m_pDXBlob);
+		
+		return reinterpret_cast<void*>(m_pBlob->m_pDXBlob->GetBufferPointer());
 	}
+
+	//! Funcion para obtener el tamaño del buffer.
+	SIZE_T ceBlob::GetBufferSize()
+	{
+		return m_pBlob->m_pDXBlob->GetBufferSize();
+	}
+
+	//! Funcin para agregar referencia.
+	uint64 ceBlob::AddRef()
+	{
+		return m_pBlob->m_pDXBlob->AddRef();
+	}
+
 }

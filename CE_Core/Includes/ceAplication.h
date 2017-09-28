@@ -1,6 +1,6 @@
 #pragma once
 #include "cePrerequisitesCore.h"
-#include <ceInterface.h>
+#include <ceScene.h>
 #include <ceGraphicsAPI.h>
 
 
@@ -50,11 +50,6 @@ namespace ceEngineSDK
 		int32 Run();
 
 		/**
-		*	@brief Funcion para obtener el input.
-		*/
-		ceInterface* GetInputInterface() { return m_pInput; }
-
-		/**
 		 *	@brief Funcion para obtener el graphics api.
 		 */
 		ceGraphicsAPI* GetGraphicsAPI() { return m_pGraphics; }
@@ -62,13 +57,11 @@ namespace ceEngineSDK
 
 	private:
 
-		//! Variable a un objeto de graphics.
+		//! Puntero a un objeto de graphics.
 		ceGraphicsAPI* m_pGraphics;
 
-		/**
-		 *	@brief Variable para la utilizacion de Inputs.
-		 */
-		ceInterface* m_pInput;
+		//! Puntero a una escena del engine.
+		ceScene* m_pEngine;
 
 		//! Funcion para inicializar.
 		virtual void Init();

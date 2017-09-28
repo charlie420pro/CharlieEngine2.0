@@ -1,8 +1,6 @@
 #include "ceGraphicsAPI.h"
 #include "DX11Headers.h"
 #include <windows.h>
-#include <fstream>
-
 
 namespace ceEngineSDK
 {
@@ -23,7 +21,7 @@ namespace ceEngineSDK
 		m_pVertexShader = nullptr;
 		m_pTextureRTV = nullptr;
 		m_pTextureDSV = nullptr;
-		m_pInputLayaout = nullptr;
+		m_pInputLayout = nullptr;
 		m_pShaderResourceView = nullptr;
 		m_pSampler = nullptr;
 		m_pBlob = nullptr;
@@ -35,21 +33,7 @@ namespace ceEngineSDK
 	 **/
 	ceGraphicsAPI::~ceGraphicsAPI()
 	{
-		//! Asignamos por default en el destructor todos los punteros como nulos.
-		m_pDevice = nullptr;
-		m_pDeviceContext = nullptr;
-		m_pSwapChain = nullptr;
-		m_pRenderTargetView = nullptr;
-		m_pDepthStencilView = nullptr;
-		m_pPixelShader = nullptr;
-		m_pVertexShader = nullptr;
-		m_pTextureRTV = nullptr;
-		m_pTextureDSV = nullptr;
-		m_pInputLayaout = nullptr;
-		m_pShaderResourceView = nullptr;
-		m_pSampler = nullptr;
-		m_pBlob = nullptr;
-		m_uiScreenHandle = m_iHeight = m_iWidth = 0;
+		Destroy();
 	}
 
 
@@ -61,89 +45,61 @@ namespace ceEngineSDK
 	 **/
 	void ceGraphicsAPI::Init(uint32 uiScreenHandle, int32 iWidth, int32 iHeight)
 	{
+		//! Limpiamos en caso de que ya se hayan inicializado variables.
+		Destroy();
+
 		//! Guardamos las variables de parametro en las variables miembro para futuras referencias.
 		m_uiScreenHandle = uiScreenHandle;
 		m_iWidth = iWidth;
 		m_iHeight = iHeight;
 
-		//! Limpiamos en caso de que ya se hayan inicializado variables.
-		Destroy();
-
-		RECT rc;
-		GetClientRect(reinterpret_cast<HWND>(m_uiScreenHandle), &rc);//! Guardamos las dimensiones de la ventana en el RECT
-		uint32 width = rc.right - rc.left;
-		uint32 height = rc.bottom - rc.top;
-		
-
-		ceVector4D EyePosition(5.0f, 3.0f, -10.0f, 0.0f);
-		ceVector4D At(0.0f, 3.0f, 0.0f, 0.0f);
-		ceVector4D Up(0.0f, 1.0f, 0.0f, 0.0f);
-
 		m_World = ceMatrix_4X4::Identity();
-		m_Camera.m_fAspectRatio = (float)width / (float)height;
-		m_Camera.Init(EyePosition, At, Up);
 
 		//! Creamos el device.
 		CreateDevice();
 		//! Creamos el device context.
 		CreateDeviceContext();
 		//! Creamos el swap chain.
-		CreateSwapChain(m_uiScreenHandle, m_iWidth, m_iHeight,
-		m_pDevice->GetDeviceReference(), m_pDeviceContext->GetDeviceContextReference());
-		
-		//! Importamos el modelo.
-		m_Model.Init("MewtwoWalk.fbx", m_pDevice->GetDevice());
-		
-		m_Diffuse.m_lightPosition = ceVector3D(8, 20, 0);
-		m_Diffuse.m_Intensity = 0;
-		m_Diffuse.m_Bias = 0;
-		m_Diffuse.m_Scale = 0;
-		m_Diffuse.ClearColor = ceVector4D(1, 0, 0, 1);
-		
-		
+		CreateSwapChain(m_uiScreenHandle, m_iWidth, m_iHeight);
 
-				//! Creamos el render target view.
-		m_pTextureRTV = new ceTexture();
-		m_pTextureDSV = new ceTexture();
+		/// Creamos el render target view.
+		CreateRenderTargetView();
+		/// Creamos el depth stencil view.
+		CreateDepthStencilView();
 
-		CreateRenderTargetView(m_pSwapChain->GetSwapChain(), m_pDevice->GetDevice(), *m_pTextureRTV);
-		//! Creamos el depth stencil view.
-		CreateDepthStencilView(m_pDevice->GetDevice(), *m_pTextureDSV);
-
-		//! Creamos el Vertex Shader.
-		CreateVertexShader(m_pDevice->GetDevice());
+		/// Creamos el Vertex Shader.
+		CreateVertexShader();
 		//! Creamos el pixel shader.
-		CreatePixelShader(m_pDevice->GetDevice());
+		CreatePixelShader();
 		//! Creamos el InputLayout.
-		CreateInputLayout(m_pDevice->GetDevice());
+		CreateInputLayout();
 
 		//! Creamos los constantbuffer.
-		CreateConstantBuffers(m_pDevice->GetDevice(),g_iNumBuffer);
+		CreateConstantBuffers();
+
+		//! Creamos una luz.
+		CreateLight();
+
+		//! Creamos los buffers contastantes de luces.
+		CreateConstantBuffersLight(sizeof(ceLight));
 
 		//! Creamos el render target.
 		SetRenderTargets();
 		//! Seteamos el viewport.
-		SetViewPort(m_pDeviceContext->GetDeviceContext());
+		SetViewPort();
 
 		//! Seteamos el input layout.
-		SetInputLayaout();
+		SetInputLayout();
 		//! Seteamos el tipo de topologia.
 		SetPrimitiveTopology();
 
 		//! Creamos el sample.
-		CreateSample(m_pDevice->GetDevice());
+		CreateSample();
+		//! Seteamos los samplers.
+		SetSamplers();
 		
 		//! Seteamos los shaders.
-		SetShaders(m_pDeviceContext->GetDeviceContext(), m_pPixelShader->GetPixelShader(), 
-				  m_pVertexShader->GetVertexShader());
-
-
-		ceTexture* NewTexture = new ceTexture();
-		m_Model.m_Meshes[0].m_Material.m_TextureVector.push_back(NewTexture);
-		m_Model.m_Meshes[0].m_Material.m_TextureVector[0]->LoadTextureFromFile(
-			"C:\\Users\\carlo\\OneDrive\\Documentos\\Visual Studio 2015\\Projects\\CharlieEngine\\Bin\\Mewtow_Difuse.png",
-			m_pDevice->GetDevice(), m_pDeviceContext->GetDeviceContext());
-				
+		SetShaders();	
 	}
 
 	/**
@@ -151,66 +107,26 @@ namespace ceEngineSDK
 	 */
 	void ceGraphicsAPI::Render()
 	{
-
-		ID3D11DeviceContext* pDeviceContext = reinterpret_cast <ID3D11DeviceContext*>(m_pDeviceContext->GetDeviceContext());
-		IDXGISwapChain* pSwapChain = reinterpret_cast <IDXGISwapChain*>(m_pSwapChain->GetSwapChain());
-		ID3D11RenderTargetView* pRTV = reinterpret_cast <ID3D11RenderTargetView*>(m_pRenderTargetView->GetRenderTargetView());
-		ID3D11DepthStencilView* pDSV = reinterpret_cast <ID3D11DepthStencilView*>(m_pDepthStencilView->GetDepthStencilView());
-		
 		
 		float ClearColor[4] = { 0.7f, 0.2f, 0.2f, 1.0f }; // red, green, blue, alpha
 
-		pDeviceContext->ClearRenderTargetView(pRTV, ClearColor);
-		pDeviceContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);	
+		/// Limpiamos el render target view con el color que queremos.
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->ClearRenderTargetView(
+			m_pRenderTargetView->m_pRenderTargetView->m_DXRenderTargetView, ClearColor);
 
-		pDeviceContext->PSSetSamplers(0, 1, &m_pSampler->m_pSampler->m_DXSamplerLinear);
-
-		pDeviceContext->PSSetShaderResources(
-			0, 1, &m_Model.m_Meshes[0].m_Material.m_TextureVector[0]->m_pTexture->m_pDXShaderResourceView);
-
-		m_Model.Render(m_pDeviceContext->GetDeviceContext());
-		
-
-		ceMatrix_4X4 matProjection = m_Camera.m_Projection.Transposed();
-		ceMatrix_4X4* tempProj = reinterpret_cast<ceMatrix_4X4*>(m_pConstantBuffers[0]->MapBuffer(pDeviceContext));
-		*tempProj = matProjection;
-		m_pConstantBuffers[0]->UnMapBuffer(pDeviceContext);
-		m_pConstantBuffers[0]->SetBuffer(pDeviceContext, 0);
-
-		ceMatrix_4X4 matView = m_Camera.m_View.Transposed();
-		ceMatrix_4X4* tempView = reinterpret_cast<ceMatrix_4X4*>(m_pConstantBuffers[1]->MapBuffer(pDeviceContext));
-		*tempView = matView;
-		m_pConstantBuffers[1]->UnMapBuffer(pDeviceContext);
-		m_pConstantBuffers[1]->SetBuffer(pDeviceContext, 1);
-
-		ceMatrix_4X4 matWorld = m_World.Transposed();
-		ceMatrix_4X4* tempWorld = reinterpret_cast<ceMatrix_4X4*>(m_pConstantBuffers[2]->MapBuffer(pDeviceContext));
-		*tempWorld = matWorld;
-		m_pConstantBuffers[2]->UnMapBuffer(pDeviceContext);
-		m_pConstantBuffers[2]->SetBuffer(pDeviceContext, 2);
-
-		
-		ceDiffuce* Diffuse = reinterpret_cast<ceDiffuce*>(m_pConstantBuffers[3]->MapBuffer(pDeviceContext));
-		*Diffuse = m_Diffuse;
-		m_pConstantBuffers[3]->UnMapBuffer(pDeviceContext);
-		m_pConstantBuffers[3]->SetBuffer(pDeviceContext, 3);
-
-
-		pSwapChain->Present(1, 0);
+		/// Limpiamos el depth stencil view.
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->ClearDepthStencilView(
+			m_pDepthStencilView->m_pDepthStencilView->m_DXDepthStencilView,
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	}
 
-	/**
-	 *	@brief Funcion para actualizar.
-	 *	@param fTime: Tiempo de actualizacion.
-	 */
+	//! Funcion para actualizar el Graphics API.
 	void ceGraphicsAPI::Update(float fTime)
 	{
-		m_Camera.Update();
+		
 	}
 
-	/**
-	 *	@brief Funcion para destruir.
-	 **/
+	//! Funcion para liberar la memoria del objeto.
 	void ceGraphicsAPI::Destroy()
 	{
 		//! Si el device es diferente de nulo.
@@ -269,11 +185,11 @@ namespace ceEngineSDK
 		}
 
 		//! Si el inputlayaout es diferente de nulo.
-		if (m_pInputLayaout != nullptr)
+		if (m_pInputLayout != nullptr)
 		{
-			m_pInputLayaout->Destroy();//! Llama su funcion destroy.
-			delete m_pInputLayaout;//! Elimina el puntero.
-			m_pInputLayaout = nullptr;
+			m_pInputLayout->Destroy();//! Llama su funcion destroy.
+			delete m_pInputLayout;//! Elimina el puntero.
+			m_pInputLayout = nullptr;
 		}
 
 		//! Si el shaderresoureview diferente de nulo.
@@ -300,77 +216,57 @@ namespace ceEngineSDK
 			m_pBlob = nullptr;
 		}
 
+		m_uiScreenHandle = m_iHeight = m_iWidth = 0;
 	}
 
-	/**
-	 *	@brief Funcion para crear el Device.
-	 **/
+	//! Funcion para crear el device context.
 	void ceGraphicsAPI::CreateDevice()
 	{
 		//! Asignamos memoria al device.
 		m_pDevice = new ceDevice();	
 	}
 
-	/**
-	 *	@brief Funcion para crear el DeviceContext.
-	 **/
+	//! Funcion para crear el device context.
 	void ceGraphicsAPI::CreateDeviceContext()
 	{
 		//! Asignamos memoria al devicecontext.
 		m_pDeviceContext = new ceDeviceContext();
 	}
 
-	/**
-	 *  @brief Funcion para crear el swapchain.
-	 *	@param uint32 Handle de la ventana.
-	 *	@param int32	Ancho de la ventana.
-	 *	@param int32	Alto de la ventana.
-	 *	@param void** Puntero a un Device.
-	 *	@param void** Puntero a un DeviceContext.
-	 **/
-	void ceGraphicsAPI::CreateSwapChain(uint32 uiScreenHandle, int32 iWidth, int32 iHeight, void** ppDevice, void** ppDeviceContext)
+	//! Funcion para crear el swapchain.
+	void ceGraphicsAPI::CreateSwapChain(uint32 uiScreenHandle, int32 iWidth, int32 iHeight)
 	{
 		//! Asignamos memoria al swapchain.
 		m_pSwapChain = new ceSwapChain();
 		//! Creamos la cadena de int32ercambio y el dispositivo.
-		m_pSwapChain->CreateSwapChainAndDevice(uiScreenHandle, iWidth, iHeight, ppDevice, ppDeviceContext);
+		m_pSwapChain->CreateSwapChainAndDevice(uiScreenHandle, iWidth, iHeight, *m_pDevice, *m_pDeviceContext);
 			
 	}
 
-	/**
-	 *	@brief Funcion para Crear el Render Target View.
-	 *	@param void* Puntero al Swapchain.
-	 *	@param void* Puntero al Device.
-	 *	@param ceTexture* Textura.
-	 **/
-	void ceGraphicsAPI::CreateRenderTargetView(void* pSwapChain, void* pDevice, ceTexture& Texture)
+	//! Funcion para crear el render target view.
+	void ceGraphicsAPI::CreateRenderTargetView()
 	{
-		
+		/// Asignamosmemoria a la textura de render target.
+		m_pTextureRTV = new ceTexture();
 		//! Asignamos memoria al render target view.
 		m_pRenderTargetView = new ceRenderTargetView();
 		//! Creamos el render target view.
-		m_pRenderTargetView->CreateRTV(pSwapChain, pDevice, Texture);
-				
+		m_pRenderTargetView->CreateRTV(m_pSwapChain, m_pDevice, *m_pTextureRTV);
 	}
 
-	/**
-	 *	@brief Funcion para Crear el Depth Stencil View.
-	 *	@param void* Puntero al Device.
-	 *	@param ceTexture* Textura.
-	 **/
-	void ceGraphicsAPI::CreateDepthStencilView(void* pDevice, ceTexture& pTexture)
+	//! Funcion para crear el depth stencil view.
+	void ceGraphicsAPI::CreateDepthStencilView()
 	{
-		//! Asignamos memoria al depth stencil view.	
+		/// Asignamos memoria a la textura de depth stencil.
+		m_pTextureDSV = new ceTexture();
+		/// Asignamos memoria al depth stencil view.	
 		m_pDepthStencilView = new ceDepthStencilView();
-		//! Creamos el depth stencil view.
-		m_pDepthStencilView->CreateDSV(pDevice, pTexture, m_iWidth, m_iHeight);
+		/// Creamos el depth stencil view.
+		m_pDepthStencilView->CreateDSV(m_pDevice, *m_pTextureDSV, m_iWidth, m_iHeight);
 	}
 
-	/**
-	 *	@brief Funcion para crear el Vertex Shader.
-	 *	@param void* Device.
-	 **/
-	void ceGraphicsAPI::CreateVertexShader(void* pDevice)
+	//! Funcion para crear el vertex shader.
+	void ceGraphicsAPI::CreateVertexShader()
 	{
 		//! Asignamos memoria al vertex shader.
 		m_pVertexShader = new ceVertexShader();
@@ -381,15 +277,12 @@ namespace ceEngineSDK
 		//! Compilamos el shader desde un archivo.
 		CompileShaderFromFile("VertexShader.hlsl", "VSMain", "vs_5_0", m_pBlob);
 		//! Creamos el vertex shader.
-		m_pVertexShader->CreateVertexShader(pDevice, m_pBlob);
+		m_pVertexShader->CreateVertexShader(m_pDevice, m_pBlob);
 			
 	}
 
-	/**
-	 *	@brief Funcion para crear el Pixel Shader.
-	 *	@param void* Device.
-	 **/
-	void ceGraphicsAPI::CreatePixelShader(void* pDevice)
+	//! Funcion para crear el pixel shader.
+	void ceGraphicsAPI::CreatePixelShader()
 	{
 		//! Asignamos memoria al pixel shader.
 		m_pPixelShader = new cePixelShader();
@@ -400,88 +293,76 @@ namespace ceEngineSDK
 		//! Compilamos el shader desde un archivo.
 		CompileShaderFromFile("PixelShader.hlsl", "PSMain", "ps_5_0", pBlob);
 		//! Creamos el pixel shader.
-		m_pPixelShader->CreatePixelShader(pDevice, pBlob);		
+		m_pPixelShader->CreatePixelShader(m_pDevice, pBlob);
 	}
 
-	/**
-	 *	@brief Funcion para crear el InputLayout.
-	 *	@param void* Device.
-	 **/
-	void ceGraphicsAPI::CreateInputLayout(void* pDevice)
+	//! Funcion para crear el inputlayout.
+	void ceGraphicsAPI::CreateInputLayout()
 	{
 		//! Asignamos memoria al input layaout.
-		m_pInputLayaout = new ceInputLayaout();
+		m_pInputLayout = new ceInputLayout();
 
 		//! Creamos el input layout.
-		m_pInputLayaout->CreateILO(pDevice, m_pBlob);
+		m_pInputLayout->CreateILO(m_pDevice, m_pBlob);
 			
 	}
 
-
-	/**
-	*	@brief Funcion para crear los ConstantBuffers.
-	*	@param void* Device.
-	**/
-	void ceGraphicsAPI::CreateConstantBuffers(void* pDevice, const int32 iNumBuffers)
+	//! Funcion para crear los buffers constantes.
+	void ceGraphicsAPI::CreateConstantBuffers()
 	{
-
-		//! Asignamos el tamaño a la lista de buffers
-		m_pConstantBuffers.resize(iNumBuffers + 1);
-	
-		for (int32 i = 0; i < iNumBuffers; i++)
+		for (int32 i = 0; i < g_iNumBuffer; i++)
 		{
-			m_pConstantBuffers[i] = new ceConstantBuffer();
-			m_pConstantBuffers[i]->CreateBuffer(pDevice);
+			ceConstantBuffer* pNewBuffer = new ceConstantBuffer();
+			pNewBuffer->CreateBuffer(m_pDevice, sizeof(ceMatrix_4X4));
+			m_pConstantBuffers.push_back(pNewBuffer);
 		}
-
-		m_pConstantBuffers[3] = new ceConstantBuffer();
-		m_pConstantBuffers[3]->CreateBuffer(pDevice);
 	}
 	
-	/**
-	 *	@brief Funcion para setear la Topologia.
-	 **/
+	//! Funcion para setear la topologia.
 	void ceGraphicsAPI::SetPrimitiveTopology()
 	{
-		ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(m_pDeviceContext->GetDeviceContext());
-		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		/// Seteamos la topologia a utilizar.
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->IASetPrimitiveTopology(
+			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 
+	//! Funcion para crear buffers constantes de luces.
+	void ceGraphicsAPI::CreateConstantBuffersLight(uint32 uiSize)
+	{
+		ceConstantBuffer* pNewBuffer = new ceConstantBuffer();
+		pNewBuffer->CreateBuffer(m_pDevice, uiSize);
+		m_pConstantBuffers.push_back(pNewBuffer);
+	}
 
-	/**
-	 *	@brief Funcion para crear el Sampler.
-	 *	@param void* Device.
-	 **/
-	void ceGraphicsAPI::CreateSample(void* pDevice)
+	//! Funcion para crear un sampler.
+	void ceGraphicsAPI::CreateSample()
 	{
 		//! Asignamos memoria al sampler.
 		m_pSampler = new ceSampler();
 	
 		//! Creamos el sampler.
-		m_pSampler->CreateSampler(pDevice);
+		m_pSampler->CreateSampler(m_pDevice);
 			
 	}
 
-	/**
-	 *	@brief Funcion para setear los render targets.
-	 **/
-	void ceGraphicsAPI::SetRenderTargets()
+	void ceGraphicsAPI::CreateLight()
 	{
-		//! Asignamos el device a un temporal para acceder de una manera mas facil a la variable.
-		ID3D11DeviceContext* pTempDevice = reinterpret_cast<ID3D11DeviceContext*>(m_pDeviceContext->GetDeviceContext());
-		ID3D11RenderTargetView** ppRTV = reinterpret_cast<ID3D11RenderTargetView**>(m_pRenderTargetView->GetRenderTargetViewReference());
-		ID3D11DepthStencilView* pDSV = reinterpret_cast<ID3D11DepthStencilView*>(m_pDepthStencilView->GetDepthStencilView());
-		//! Llamamos a la funcion OMSet.
-		pTempDevice->OMSetRenderTargets(1, ppRTV, pDSV);
+		m_Diffuse.m_LightPosition = ceVector3D(3, 10, 0);
+		m_Diffuse.m_Color = ceVector4D(0, 0.5, 1, 1);
 	}
 
-	/**
-	 *	@brief Funcion para setear el View Port.
-	 *	@param void* DeviceContext.
-	 **/
-	void ceGraphicsAPI::SetViewPort(void* pDeviceContext)
+	//! Funcion para setear los render taregets.
+	void ceGraphicsAPI::SetRenderTargets()
 	{
-		ID3D11DeviceContext* pTempDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(pDeviceContext);
+		/// Seteamos los rendertargets.
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->OMSetRenderTargets(1,
+			&m_pRenderTargetView->m_pRenderTargetView->m_DXRenderTargetView, 
+			m_pDepthStencilView->m_pDepthStencilView->m_DXDepthStencilView);
+	}
+
+	//! Funcion para setear el viewport.
+	void ceGraphicsAPI::SetViewPort()
+	{
 		// Setup the viewport
 		D3D11_VIEWPORT vp;
 		vp.Width = (float)m_iWidth;
@@ -490,48 +371,67 @@ namespace ceEngineSDK
 		vp.MaxDepth = 1.0f;
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
-		pTempDeviceContext->RSSetViewports(1, &vp);
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->RSSetViewports(1, &vp);
 	}
 
-	/**
-	 *	@brief Funcion para setear el InputLayaout.
-	 **/
-	void ceGraphicsAPI::SetInputLayaout()
+	//! Funcion para setear el inputlayout.
+	void ceGraphicsAPI::SetInputLayout()
 	{
-		ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(m_pDeviceContext->GetDeviceContext());
-		ID3D11InputLayout* pIL = reinterpret_cast<ID3D11InputLayout*>(m_pInputLayaout->GetInputLayout());
-
-		//! Seteamos el input layout.
-		pDeviceContext->IASetInputLayout(pIL);
+		/// Seteamos el InputLayout
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->IASetInputLayout(
+			m_pInputLayout->m_pInputLayout->m_DXInputLayout);
 	}
 
-	
-
-	/**
-	 *	@breif Funcion para setear los shaders.
-	 *	@param void* DeviceContext.
-	 *	@param void* PixelShader.
-	 *	@param void* VertexShader.
-	 **/
-	void ceGraphicsAPI::SetShaders(void * pDeviceContext, void * pPixelShader, void * pVertexShader)
+	//! Funcion para setear los shaders.
+	void ceGraphicsAPI::SetShaders()
 	{
-		ID3D11DeviceContext* pTempDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(pDeviceContext);
-		ID3D11VertexShader* pTempVertexShader = reinterpret_cast<ID3D11VertexShader*>(pVertexShader);
-		ID3D11PixelShader* pTempPixelShader = reinterpret_cast<ID3D11PixelShader*>(pPixelShader);
+		/// Seteamos el vertex shader.
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->VSSetShader(
+			m_pVertexShader->m_pVertexShader->m_DXVertexShader, nullptr, 0);
 
-		pTempDeviceContext->VSSetShader(pTempVertexShader, nullptr, 0);
-		pTempDeviceContext->PSSetShader(pTempPixelShader, nullptr, 0);
+		/// Seteamos el pixel shader.
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->PSSetShader(
+			m_pPixelShader->m_pPixelShader->m_DXPixelShader, nullptr, 0);
 	}
 
-	/**
-	 *	@brief Funcion para compilar un Shader desde un Archivo.
-	 *	@param const char* Nombre del Archivo.
-	 *	@param const String Punto de Entrada.
-	 *	@param const String Shader Model.
-	 *	@param ceBlob* Blob.
-	 **/
+	//! Funcion para setear los constant buffers.
+	void ceGraphicsAPI::SetConstantBuffers(ceMatrix_4X4* matProjectionCamera, ceMatrix_4X4* matViewCamera)
+	{
+		ceMatrix_4X4 matProjection = *matProjectionCamera;
+		ceMatrix_4X4* tempProj = reinterpret_cast<ceMatrix_4X4*>(m_pConstantBuffers[0]->MapBuffer(m_pDeviceContext));
+		*tempProj = matProjection;
+		m_pConstantBuffers[0]->UnMapBuffer(m_pDeviceContext);
+		m_pConstantBuffers[0]->SetBuffer(m_pDeviceContext, 0);
+
+		ceMatrix_4X4 matView = *matViewCamera;
+		ceMatrix_4X4* tempView = reinterpret_cast<ceMatrix_4X4*>(m_pConstantBuffers[1]->MapBuffer(m_pDeviceContext));
+		*tempView = matView;
+		m_pConstantBuffers[1]->UnMapBuffer(m_pDeviceContext);
+		m_pConstantBuffers[1]->SetBuffer(m_pDeviceContext, 1);
+
+		ceMatrix_4X4 matWorld = m_World.Transposed();
+		ceMatrix_4X4* tempWorld = reinterpret_cast<ceMatrix_4X4*>(m_pConstantBuffers[2]->MapBuffer(m_pDeviceContext));
+		*tempWorld = matWorld;
+		m_pConstantBuffers[2]->UnMapBuffer(m_pDeviceContext);
+		m_pConstantBuffers[2]->SetBuffer(m_pDeviceContext, 2);
+
+
+		ceLight* Diffuse = reinterpret_cast<ceLight*>(m_pConstantBuffers[3]->MapBuffer(m_pDeviceContext));
+		*Diffuse = m_Diffuse;
+		m_pConstantBuffers[3]->UnMapBuffer(m_pDeviceContext);
+		m_pConstantBuffers[3]->SetBuffer(m_pDeviceContext, 3);
+	}
+
+	void ceGraphicsAPI::SetSamplers()
+	{
+		/// Seteamos los samplers a utilizar.
+		m_pDeviceContext->m_pDeviceContext->m_pDXDeviceContext->PSSetSamplers(
+			0, 1, &m_pSampler->m_pSampler->m_DXSampler);
+	}
+
+	//! Funcion para compilar un shader desde un archivo.
 	void ceGraphicsAPI::CompileShaderFromFile(const char* szFileName, const String szEntryPoint32, 
-											const String szShaderModel, ceBlob* ppBlobOut)
+											const String szShaderModel, ceBlob* pBlobOut)
 	{
 		HRESULT hr = S_OK;
 		
@@ -566,7 +466,7 @@ namespace ceEngineSDK
 		
 		hr = D3DCompile(fileData.c_str(), fileData.size(),szFileName, nullptr, nullptr,
 			szEntryPoint32.c_str(),szShaderModel.c_str(),dwShaderFlags
-			, 0, (ID3DBlob**)&ppBlobOut->m_pBlob->m_pDXBlob, &pErrorBlob);
+			, 0, (ID3DBlob**)&pBlobOut->m_pBlob->m_pDXBlob, &pErrorBlob);
 
 		if (FAILED(hr))
 		{

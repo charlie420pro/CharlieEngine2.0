@@ -1,27 +1,22 @@
 #include "ceDepthStencilView.h"
-#include <d3d11.h>
-#include <d3dcompiler.h>
+#include "DX11Headers.h"
 
 namespace ceEngineSDK
 {
-	struct ceDSV
-	{
-		ID3D11DepthStencilView* m_DXDepthStencilView;
-		void Destroy() { m_DXDepthStencilView->Release(); }
-	};
-
+	//! Constructor default de la clase.
 	ceDepthStencilView::ceDepthStencilView()
 	{
 		m_pDepthStencilView = nullptr;
-		m_pDepthStencilView = new ceDSV();
+		m_pDepthStencilView = new DepthStencilView();
 	}
 
-
+	//! Destructor default de la clase.
 	ceDepthStencilView::~ceDepthStencilView()
 	{
 		Destroy();
 	}
 
+	//! Funcion para liberar memoria de la clase.
 	void ceDepthStencilView::Destroy()
 	{
 		if (m_pDepthStencilView != nullptr)
@@ -32,26 +27,12 @@ namespace ceEngineSDK
 		}
 	}
 	
-	void** ceDepthStencilView::GetDepthStencilViewReference()
-	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void** para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void**>(&this->m_pDepthStencilView->m_DXDepthStencilView);
-	}
-
-	void* ceDepthStencilView::GetDepthStencilView()
-	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void* para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void*>(this->m_pDepthStencilView->m_DXDepthStencilView);
-	}
-
-	void ceDepthStencilView::CreateDSV(void * pDevice, ceTexture& pTexture, int32 iWidth, int32 iHeight)
+	//! Funcion para crear el DepthStencilView.
+	void ceDepthStencilView::CreateDSV(ceDevice * pDevice, ceTexture& pTexture, int32 iWidth, int32 iHeight)
 	{
 		
-		ID3D11Device* pTempDevice = reinterpret_cast<ID3D11Device*>(pDevice);
-
 		HRESULT hr = S_OK;
-		// Create depth stencil texture
-		D3D11_TEXTURE2D_DESC descDepth;
+		D3D11_TEXTURE2D_DESC descDepth; /// Descriptor de la textura.
 		ZeroMemory(&descDepth, sizeof(descDepth));
 		descDepth.Width = iWidth;
 		descDepth.Height = iHeight;
@@ -65,12 +46,13 @@ namespace ceEngineSDK
 		descDepth.CPUAccessFlags = 0;
 		descDepth.MiscFlags = 0;
 
-		hr = pTempDevice->CreateTexture2D(&descDepth, nullptr, 
-			(ID3D11Texture2D**)pTexture.GetTextureReference());
+		hr = pDevice->m_pDevice->m_DXDevice->CreateTexture2D(&descDepth, nullptr, 
+			&pTexture.m_pTexture->m_pDXTexture);
+
 		if (FAILED(hr))
 			std::cout << "Fallo al Crear la Textura" << std::endl;
 
-		hr = pTempDevice->CreateDepthStencilView((ID3D11Texture2D*)pTexture.GetTexture(),
+		hr = pDevice->m_pDevice->m_DXDevice->CreateDepthStencilView(pTexture.m_pTexture->m_pDXTexture,
 			nullptr, &m_pDepthStencilView->m_DXDepthStencilView);
 		if (FAILED(hr))
 			std::cout << "Fallo al Crear DSV" << std::endl;

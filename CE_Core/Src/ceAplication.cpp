@@ -2,8 +2,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <iostream>
 #include <Windows.h>
-#include <dinput.h>
 #include <exception>
+#include <DX11Headers.h>
 
 
 namespace ceEngineSDK
@@ -36,24 +36,6 @@ namespace ceEngineSDK
 
 			break;
 
-		case WM_KEYDOWN:
-		{
-
-		if (VK_LEFT)
-			std::cout << "Presionaste Izquierda" << std::endl;
-
-		if (VK_RIGHT)
-			std::cout << "Presionaste Derecha" << std::endl;
-			
-		if (VK_UP)
-			std::cout << "Presionaste arriba" << std::endl;
-
-		if (VK_DOWN)
-			std::cout << "Presionaste abajo" << std::endl;
-
-			break;
-		}
-
 		default://! En el caso default definimos el windowproc.
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
@@ -72,7 +54,6 @@ namespace ceEngineSDK
 		m_iWidth = 1024;
 		m_iHeight = 720;
 		m_pGraphics = nullptr;
-		m_pInput = nullptr;
 	}
 
 	/**
@@ -80,6 +61,7 @@ namespace ceEngineSDK
 	 */
 	ceAplication::~ceAplication()
 	{
+		Destroy();
 	}
 
 	/**
@@ -120,16 +102,20 @@ namespace ceEngineSDK
 			throw exception("Fallo al crear la ventana");//"! Manda mensaje de fallo al crear la ventana.
 
 
-		/// Inicializamos los inputs.
-		m_pInput = new ceInterface();
-		m_pInput->Init(reinterpret_cast<void*>(hInstance), reinterpret_cast<void*>(hwnd), m_iWidth, m_iHeight);
-		m_pInput->Update();
+
 		//! Mostramos la ventana.
 		ShowWindow(hwnd, SW_SHOW);
 
 		//! Inicializamos graphics.
 		m_pGraphics = new ceGraphicsAPI();
 		m_pGraphics->Init(reinterpret_cast<uint32>(hwnd), m_iWidth, m_iHeight);
+
+		m_pEngine = new ceScene();
+		m_pEngine->Init();
+		m_pEngine->CreateCamera(reinterpret_cast<uint32>(hwnd));
+		m_pEngine->CreateModel("MewtwoWalk.fbx", m_pGraphics->m_pDevice, m_pGraphics->m_pDeviceContext);
+		m_pEngine->InitInputs(reinterpret_cast<void*>(hInstance),
+			reinterpret_cast<void*>(hwnd), m_iWidth, m_iHeight);		
 
 		//! Frecuencia.
 		LARGE_INTEGER Frecuancy;
@@ -216,39 +202,7 @@ namespace ceEngineSDK
 	 */
 	void ceAplication::UpDate(float fDelta)
 	{
-		if (m_pInput->Update())
-		{
-			if (m_pInput->m_KeyBoard.IsKeyDown(DIK_A) ||
-				m_pInput->m_KeyBoard.IsKeyDown(DIK_LEFTARROW))
-			{
-				ceVector4D Direccion = { -1,0,0,0 };
-				Direccion *= fDelta * m_pGraphics->m_Camera.m_fSpeed;
-				m_pGraphics->m_Camera.MoveCamera(Direccion);
-			}
-			if (m_pInput->m_KeyBoard.IsKeyDown(DIK_D) ||
-				m_pInput->m_KeyBoard.IsKeyDown(DIK_RIGHTARROW))
-			{
-				ceVector4D Direccion = { 1,0,0,0 };
-				Direccion *= fDelta * m_pGraphics->m_Camera.m_fSpeed;
-				m_pGraphics->m_Camera.MoveCamera(Direccion);
-			}
-
-			if (m_pInput->m_KeyBoard.IsKeyDown(DIK_W) ||
-				m_pInput->m_KeyBoard.IsKeyDown(DIK_UPARROW))
-			{
-				ceVector4D Direccion = { 0,1,0,0 };
-				Direccion *= fDelta * m_pGraphics->m_Camera.m_fSpeed;
-				m_pGraphics->m_Camera.MoveCamera(Direccion);
-			}
-
-			if (m_pInput->m_KeyBoard.IsKeyDown(DIK_S) ||
-				m_pInput->m_KeyBoard.IsKeyDown(DIK_DOWNARROW))
-			{
-				ceVector4D Direccion = { 0,-1,0,0 };
-				Direccion *= fDelta * m_pGraphics->m_Camera.m_fSpeed;
-				m_pGraphics->m_Camera.MoveCamera(Direccion);
-			}
-		}
+		m_pEngine->Update(fDelta);
 		m_pGraphics->Update(fDelta);
 	}
 
@@ -258,6 +212,14 @@ namespace ceEngineSDK
 	void ceAplication::Render()
 	{
 		m_pGraphics->Render();
+		m_pEngine->Render();
+		for (int32 i = 0; i < m_pEngine->m_pCameraVector.size(); ++i)
+		{
+			m_pGraphics->SetConstantBuffers(&m_pEngine->m_pCameraVector[i]->m_Projection.Transposed(),
+				&m_pEngine->m_pCameraVector[i]->m_View.Transposed());	
+		}
+
+		m_pGraphics->m_pSwapChain->m_pSwapChain->m_DXSwapChain->Present(1, 0);
 	}
 
 	/**
@@ -279,10 +241,9 @@ namespace ceEngineSDK
 	 */
 	void ceAplication::Destroy()
 	{
+		if (m_pEngine != nullptr)
+			m_pEngine->Destroy();
 		if(m_pGraphics != nullptr)
-		m_pGraphics->Destroy();
-
-		if(m_pInput != nullptr)
-		m_pInput->Destroy();
+			m_pGraphics->Destroy();
 	}
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "cePrerequisitesGraphics.h"
-#include "ceString.h"
+#include "ceDevice.h"
+#include "ceDeviceContext.h"
+#include <ceString.h>
 
 namespace ceEngineSDK
 {
@@ -14,13 +16,18 @@ namespace ceEngineSDK
 	 */
 	class CE_GRAPHICS_EXPORT ceTexture
 	{
-	protected:
+		///************************************************************************/
+		///*                     Friends de Clase.								  */
+		///************************************************************************/
+
+	private:
 		friend class ceGraphicsAPI;
-	public:
 
 		///************************************************************************/
-		///*                       Constructor y Destructor						  */
+		///*                   Constructor y Destructor de la clase.			  */
 		///************************************************************************/
+
+	public:
 
 		/**
 		 *	@brief Constructor default.
@@ -71,34 +78,6 @@ namespace ceEngineSDK
 		 */
 		void Destroy();
 
-		///************************************************************************/
-		///*							Accesores.								  */
-		///************************************************************************/
-
-		/**
-		 *	@brief Funcion para obtener una referencia a la textura.
-		 *	@return referencia a la textura.
-		 */
-		void** GetTextureReference();
-
-		/**
-		 *	@brief Funcion para obtener la textura.
-		 *	@return puntero a la textura.
-		 */
-		void* GetTexture();
-
-		/**
-		 *	@brief Funcion para obtener una referencia al shader resource view.
-		 *	@return referencia a la textura.
-		 */
-		void** GetShaderResourceViewReference();
-
-		/**
-		 *	@brief Funcion para obtener shader resource view.
-		 *	@return puntero a la textura.
-		 */
-		void* GetShaderResourceView();
-
 		/**
 		 *	@brief Funcion para setear la textura.
 		 *	@param void* pbackBuffer.
@@ -112,10 +91,9 @@ namespace ceEngineSDK
 		/**
 		 *	@brief Funcion para cargar una textura desde un archivo.
 		 *	@param String sFileName: Nombre de la textura.
-		 *	@param void* pDevice: El device.
-		 *  @param void* pDeviceContext: El device context.
+		 *	@param ceDevice* pDevice: El device.
 		 */
-		void LoadTextureFromFile(String sFileName, void* pDevice, void* pDeviceContext);
+		void LoadTextureFromFile(String sFileName, ceDevice* pDevice);
 	};
 }
 

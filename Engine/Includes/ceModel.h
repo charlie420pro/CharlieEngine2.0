@@ -1,19 +1,19 @@
 #pragma once
-#include "cePrerequisitesGraphics.h"
-#include "ceString.h"
 #include "ceMesh.h"
-
+#include <ceVertex.h>
 
 namespace ceEngineSDK
 {
-	/// Clase de modelo.
-	class CE_GRAPHICS_EXPORT ceModel
+	/** 
+	 *	@brief Clase de modelo.
+	 */
+	class CE_ENGINE_EXPORT ceModel
 	{
-	public:
-
 		///************************************************************************/
 		///*                     Constructor y Destructor						  */
 		///************************************************************************/
+
+	public:
 
 		/** 
 		 *	@brief Constructor default.
@@ -32,13 +32,12 @@ namespace ceEngineSDK
 		/** 
 		 * @brief Vector de meshes del modelo.
 		 */
-		Vector<ceMesh> m_Meshes;
+		Vector<ceMesh*> m_pMeshesVector;
 
 		/**
 		 *	@brief Nombre del modelo
 		 */
 		String m_sName;
-
 
 		///************************************************************************/
 		///*                Funciones de la clase								  */
@@ -47,9 +46,9 @@ namespace ceEngineSDK
 		/**
 		 *	@brief Funcion para inicializar el modelo.
 		 *	@param String fileName: Nombre del archivo.
-		 *	@param void* pDevice: Device.
+		 *	@param ceDevice* pDevice: Device.
 		 **/
-		void Init(String fileName, void* pDevice);
+		void Init(String fileName, ceDevice* pDevice);
 
 		/**
 		 *	@brief Funcion para actualizar.
@@ -64,28 +63,34 @@ namespace ceEngineSDK
 
 		/**
 		 *	@brief Funcion para renderear el modelo.
-		 *	@param void* pDeviceContext para mandar el drawindex.
+		 *	@param ceDeviceContext* pDeviceContext:  Device context para mandar el drawindex.
 		 **/
-		void Render(void* pDeviceContex);
+		void Render(ceDeviceContext* pDeviceContex);
 
 		/**
 		 *	@brief Funcion para crear los buffers de vertices.
-		 *	@param void* pDevice para crear los buffers.
+		 *	@param ceDevice* pDevice para crear los buffers.
 		 **/
-		void CreateVertexBuffers(void* pDevice);
+		void CreateVertexBuffers(ceDevice* pDevice);
 
 		/**
 		 *	@brief Funcion para crear los buffers de indices.
-		 *	@param void* pDevice para crear los indices.
+		 *	@param ceDevice* pDevice para crear los indices.
 		 **/
-		void CreateIndexBuffers(void* pDevice);
+		void CreateIndexBuffers(ceDevice* pDevice);
 
+		/**
+		 *	@brief Funcion para setear los buffers.
+		 *	@param ceDeviceContext* pDeviceContext: Contexto del dispositivo.
+		 */
+		void SetBuffers(ceDeviceContext* pDeviceContext);
 
 		/**
 		 *	@brief Funcion para leer el archivo.
 		 *	@param String fileName: Nombre del archivo.
+		 *	@param ceDevice* pDevice: Device.
 		 **/
-		void ImportModel(String fileName);
+		void ImportModel(String fileName, ceDevice* pDevice);
 
 	};
 

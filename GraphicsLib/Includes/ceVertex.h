@@ -10,15 +10,23 @@ namespace ceEngineSDK
 	{
 	public:
 
-		/************************************************************************/
-		/*           Variables miembro de la Clase								*/
-		/************************************************************************/
+		///************************************************************************/
+		///*           Variables miembro de la Estructura						  */
+		///************************************************************************/
 
-		//! Vector 3D para la posicion del vertice.
+		/**
+		 *	@brief Vector 3D para la posicion del vertice.
+		 */
 		ceVector3D m_Position;
-		//! Vector 2D para la coordenada de textura.
+
+		/** 
+		 *	@brief Vector 2D para la coordenada de textura.
+		 */
 		ceVector2D m_TexCoord;
-		//! Vector 3D para las normales.
+
+		/** 
+		 *	@brief Vector 3D para las normales.
+		 */
 		ceVector3D m_Normals;
 	
 	};

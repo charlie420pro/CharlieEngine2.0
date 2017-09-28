@@ -1,28 +1,22 @@
 #include "ceDevice.h"
-#include <d3d11.h>
-//#include <d3dx11.h>
-#include <d3dcompiler.h>
+#include "DX11Headers.h"
 
 namespace ceEngineSDK
 {
-	struct Device
-	{
-		ID3D11Device* m_DXDevice;
-		void Destroy() { m_DXDevice->Release(); }
-	};
-
+	//! Constructor default.
 	ceDevice::ceDevice()
 	{
 		m_pDevice = nullptr;
 		m_pDevice = new Device();
 	}
 
-
+	//! Destructor default.
 	ceDevice::~ceDevice()
 	{
 		Destroy();
 	}
 
+	//! Funcion para liberar la memoria del objeto.
 	void ceDevice::Destroy()
 	{
 		if (m_pDevice != nullptr)
@@ -31,16 +25,5 @@ namespace ceEngineSDK
 			delete m_pDevice;
 			m_pDevice = nullptr;
 		}
-	}
-
-	void** ceDevice::GetDeviceReference()
-	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void** para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void**>(&this->m_pDevice->m_DXDevice);
-	}
-	void* ceDevice::GetDevice()
-	{
-		//! Regresa el Buffer que no cambia int32erpretado como un void* para utilizarlo fuera de este archivo cpp.
-		return reinterpret_cast<void*>(this->m_pDevice->m_DXDevice);
 	}
 }

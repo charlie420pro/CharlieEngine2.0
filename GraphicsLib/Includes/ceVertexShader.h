@@ -1,53 +1,62 @@
 #pragma once
 #include "cePrerequisitesGraphics.h"
+#include "ceDevice.h"
 #include "ceBlob.h"
 
 namespace ceEngineSDK
 {
-	/************************************************************************/
-	/*   Declaracion por delante de las estructuras definidas en el CPP		*/
-	/************************************************************************/
+	///************************************************************************/
+	///*   Declaracion por delante de las estructuras definidas en DXHeaders  */
+	///************************************************************************/
 	struct VertexShader;
 
 	//! Clase de shader de vertices.
 	class CE_GRAPHICS_EXPORT ceVertexShader
 	{
-	public:
-		/************************************************************************/
-		/*                       Constructor y Destructor						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                     Friends de Clase.								  */
+		///************************************************************************/
 
-		//! Constructor default.
+	private:
+		friend class ceGraphicsAPI;
+
+		///************************************************************************/
+		///*                   Constructor y Destructor default					  */
+		///************************************************************************/
+
+	public:
+
+		/**
+		 *	@brief Constructor default.
+		 */
 		ceVertexShader();
-		//! Destructor default.
+
+		/**
+		 *	@brief Destructor default.
+		 */
 		~ceVertexShader();
 
-		/************************************************************************/
-		/*                      Variables miembro de clase.						*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Variables miembro de clase.					  */
+		///************************************************************************/
 
 		//! Puntero al shader de vertices.
 		VertexShader* m_pVertexShader;
 
-		/************************************************************************/
-		/*                      Funciones de clase.								*/
-		/************************************************************************/
+		///************************************************************************/
+		///*                      Funciones de clase.							  */
+		///************************************************************************/
 
-		//! Funcion para destruir.
+		/** 
+		 *	@brief Funcion para liberar memoria del VertexShader.
+		 */
 		void Destroy();
 
-		//! Funcion para crear el VS.
-		void CreateVertexShader(void* pDevice, ceBlob* pBlob);
-
-		/************************************************************************/
-		/*							Accesores.									*/
-		/************************************************************************/
-
-		//! Funcion para obtener por referencia el shader de vertices.
-		void** GetVertexShaderReference();
-		//! Funcion para obtener el shader de vertices.
-		void* GetVertexShader();
-		
-
+		/**
+		 *	@brief Funcion para crear el shader de pixeles.
+		 *	@param ceDevice* pDevice: Device para crear el shader.
+		 *	@param ceBlob* pBlob: blob.
+		 */
+		void CreateVertexShader(ceDevice* pDevice, ceBlob* pBlob);
 	};
 }
